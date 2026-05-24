@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leaderboard – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .lb-hero { background:linear-gradient(135deg,var(--navy),#2a2a6e); padding:52px 0 36px; text-align:center; position:relative; overflow:hidden; }
+    .lb-hero::before { content:'🏆'; position:absolute; font-size:18rem; opacity:.04; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; }
+    .lb-hero h1, .lb-hero p { position:relative; }
+    .lb-hero h1 { color:#fff; }
+    .lb-hero p  { color:rgba(255,255,255,.7); margin-top:7px; }
+    /* Podium */
+    .top3-podium { display:flex; align-items:flex-end; justify-content:center; gap:14px; margin-top:36px; padding:0 20px; position:relative; }
+    .podium-card { background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.14); border-radius:var(--radius-lg); padding:18px 20px 22px; text-align:center; flex:1; max-width:190px; backdrop-filter:blur(8px); }
+    .podium-card.first { background:rgba(255,217,74,.14); border-color:rgba(255,217,74,.32); order:2; padding-top:26px; }
+    .podium-card.second { order:1; }
+    .podium-card.third  { order:3; }
+    .podium-crown  { font-size:1.5rem; margin-bottom:5px; }
+    .podium-avatar { width:54px; height:54px; border-radius:50%; margin:0 auto 9px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:1.05rem; color:#fff; border:3px solid rgba(255,255,255,.25); }
+    .podium-name  { font-family:var(--font-display); font-weight:800; font-size:.88rem; color:#fff; }
+    .podium-score { font-family:var(--font-mono); font-size:.97rem; font-weight:700; color:var(--yellow); margin-top:4px; }
+    .podium-rank  { font-family:var(--font-display); font-weight:900; font-size:1.4rem; color:rgba(255,255,255,.35); margin-top:7px; }
+    .podium-card.first .podium-rank { color:var(--yellow); }
+    /* Body */
+    .lb-body { max-width:820px; margin:0 auto; padding:36px 16px 72px; }
+    /* Row grid */
+    .lb-row-grid { display:grid; grid-template-columns:46px 42px 1fr 90px 80px 66px; gap:10px; align-items:center; padding:12px 18px; border-bottom:1px solid var(--border); transition:background var(--transition); }
+    .lb-row-grid:hover { background:rgba(92,51,246,.03); }
+    .lb-row-grid.you  { background:rgba(92,51,246,.05); border-color:rgba(92,51,246,.15); }
+    .lb-row-grid.gold   { background:rgba(255,217,74,.05); border-color:rgba(240,195,0,.2); }
+    .lb-row-grid.silver { background:rgba(176,190,197,.06); }
+    .lb-row-grid.bronze { background:rgba(205,127,50,.05); }
+    .lb-rank { font-family:var(--font-mono); font-weight:700; font-size:.92rem; color:var(--slate); }
+    .lb-rank.gold   { color:#c9a800; }
+    .lb-rank.silver { color:#7a8fa0; }
+    .lb-rank.bronze { color:#9b6020; }
+    .lb-name   { font-family:var(--font-display); font-weight:700; font-size:.9rem; }
+    .lb-sub    { font-size:.72rem; color:var(--slate); margin-top:1px; }
+    .lb-xp     { font-family:var(--font-mono); font-weight:700; color:var(--primary); font-size:.9rem; text-align:right; }
+    .lb-quizzes{ font-family:var(--font-mono); font-size:.84rem; color:var(--slate); text-align:right; }
+    .lb-change { font-size:.74rem; font-weight:700; text-align:right; }
+    .lb-change.up   { color:var(--green-dark); }
+    .lb-change.down { color:var(--coral); }
+    .lb-change.same { color:var(--slate); }
+    /* Table header */
+    .lb-table-head { display:grid; grid-template-columns:46px 42px 1fr 90px 80px 66px; gap:10px; padding:10px 18px; background:var(--bg); border-radius:var(--radius-sm) var(--radius-sm) 0 0; border:1.5px solid var(--border); border-bottom:none; }
+    .lb-th { font-family:var(--font-display); font-weight:800; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--slate); }
+    .lb-th.right { text-align:right; }
+    /* responsive: hide quizzes col on mobile */
+    @media(max-width:600px) {
+      .lb-row-grid  { grid-template-columns:40px 36px 1fr 80px 56px; }
+      .lb-table-head{ grid-template-columns:40px 36px 1fr 80px 56px; }
+      .lb-quizzes   { display:none; }
+      .lb-th.hide-sm{ display:none; }
+      .podium-card  { padding:14px 12px 18px; }
+      .podium-avatar{ width:44px; height:44px; font-size:.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="courses.html">Courses</a>
+      <a href="progress.html">My Progress</a>
+      <a href="leaderboard.html" class="active">Leaderboard</a>
+      <a href="ai-generator.html">AI Tools</a>
+    </div>
+    <div class="nav-actions"><a href="profile.html" class="nav-avatar">AR</a></div>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav"><div class="mobile-nav-inner">
+  <div class="mobile-nav-user"><div class="nav-avatar">AR</div><div><div class="mobile-nav-user-name">Abdullah Rashid</div><div class="mobile-nav-user-email">abdullah@example.com</div></div></div>
+  <div class="mobile-nav-section">Navigation</div>
+  <a href="dashboard.html"    class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
+  <a href="courses.html"      class="mobile-nav-link"><span class="icon">📚</span> Courses</a>
+  <a href="progress.html"     class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
+  <a href="leaderboard.html"  class="mobile-nav-link active"><span class="icon">🏆</span> Leaderboard</a>
+  <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
+  <div class="mobile-nav-divider"></div>
+  <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
+  <a href="login.html"   class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+</div></div>
+
+<!-- Hero / Podium -->
+<div class="lb-hero">
+  <div class="section-label" style="background:rgba(255,255,255,.12);color:#fff;position:relative">🏆 Leaderboard</div>
+  <h1 style="margin-top:11px">Who's on Top?</h1>
+  <p>Rankings update after every quiz. Keep quizzing to climb!</p>
+  <div class="top3-podium anim-fade-up">
+    <div class="podium-card second">
+      <div class="podium-crown">🥈</div>
+      <div class="podium-avatar" style="background:linear-gradient(135deg,var(--green-dark),#0ea5e9)">SH</div>
+      <div class="podium-name">Sara Hassan</div>
+      <div class="podium-score">2,310 XP</div>
+      <div class="podium-rank">#2</div>
+    </div>
+    <div class="podium-card first">
+      <div class="podium-crown">👑</div>
+      <div class="podium-avatar" style="background:linear-gradient(135deg,var(--primary),var(--coral));width:66px;height:66px;font-size:1.15rem;border-color:rgba(255,217,74,.6)">RA</div>
+      <div class="podium-name">Rahman Al-Farsi</div>
+      <div class="podium-score">2,480 XP</div>
+      <div class="podium-rank">#1</div>
+    </div>
+    <div class="podium-card third">
+      <div class="podium-crown">🥉</div>
+      <div class="podium-avatar" style="background:linear-gradient(135deg,#CD7F32,#e6a44d)">YM</div>
+      <div class="podium-name">Yusuf Malik</div>
+      <div class="podium-score">2,195 XP</div>
+      <div class="podium-rank">#3</div>
+    </div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="lb-body">
+
+  <!-- Scope filters — PHP GET param: ?scope=global&course=all&period=alltime -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px" data-filter-group>
+    <button class="filter-chip active">🌍 Global</button>
+    <button class="filter-chip">📊 DAG Fundamentals</button>
+    <button class="filter-chip">🕌 Islamic Finance</button>
+    <button class="filter-chip">💹 Zakat Studies</button>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px" data-filter-group>
+    <button class="filter-chip">📅 This Week</button>
+    <button class="filter-chip">📅 This Month</button>
+    <button class="filter-chip active">🏅 All Time</button>
+  </div>
+
+  <!-- Your rank banner -->
+  <div class="alert alert-info" style="margin-bottom:18px">
+    <span>🎯</span>
+    <span>You are ranked <strong>#12</strong> globally with <strong>1,840 XP</strong>. Need <strong>120 more XP</strong> to reach #11!</span>
+  </div>
+
+  <!-- Table -->
+  <div class="lb-table-head">
+    <div class="lb-th">Rank</div>
+    <div></div>
+    <div class="lb-th">Student</div>
+    <div class="lb-th right">XP</div>
+    <div class="lb-th right hide-sm">Quizzes</div>
+    <div class="lb-th right">Change</div>
+  </div>
+
+  <!-- PHP: foreach ($leaderboard as $entry) -->
+  <div style="border:1.5px solid var(--border);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;background:var(--surface)">
+
+    <div class="lb-row-grid gold">
+      <div class="lb-rank gold">#1</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,var(--primary),var(--coral));width:36px;height:36px;font-size:.78rem">RA</div>
+      <div><div class="lb-name">Rahman Al-Farsi</div><div class="lb-sub">Islamic Finance · Top scorer</div></div>
+      <div class="lb-xp">2,480</div>
+      <div class="lb-quizzes">186</div>
+      <div class="lb-change same">— 0</div>
+    </div>
+
+    <div class="lb-row-grid silver">
+      <div class="lb-rank silver">#2</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,var(--green-dark),#0ea5e9);width:36px;height:36px;font-size:.78rem">SH</div>
+      <div><div class="lb-name">Sara Hassan</div><div class="lb-sub">DAG Fundamentals</div></div>
+      <div class="lb-xp">2,310</div>
+      <div class="lb-quizzes">174</div>
+      <div class="lb-change up">↑ 1</div>
+    </div>
+
+    <div class="lb-row-grid bronze">
+      <div class="lb-rank bronze">#3</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#CD7F32,#e6a44d);width:36px;height:36px;font-size:.78rem">YM</div>
+      <div><div class="lb-name">Yusuf Malik</div><div class="lb-sub">Zakat Studies</div></div>
+      <div class="lb-xp">2,195</div>
+      <div class="lb-quizzes">162</div>
+      <div class="lb-change down">↓ 1</div>
+    </div>
+
+    <div class="lb-row-grid">
+      <div class="lb-rank">#4</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#8e44ad,#3498db);width:36px;height:36px;font-size:.78rem">NI</div>
+      <div><div class="lb-name">Nadia Ibrahim</div><div class="lb-sub">Islamic Finance</div></div>
+      <div class="lb-xp">2,050</div>
+      <div class="lb-quizzes">155</div>
+      <div class="lb-change up">↑ 2</div>
+    </div>
+
+    <div class="lb-row-grid">
+      <div class="lb-rank">#5</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#27ae60,#2ecc71);width:36px;height:36px;font-size:.78rem">AK</div>
+      <div><div class="lb-name">Ahmed Khan</div><div class="lb-sub">DAG Fundamentals</div></div>
+      <div class="lb-xp">1,980</div>
+      <div class="lb-quizzes">148</div>
+      <div class="lb-change same">— 0</div>
+    </div>
+
+    <div class="lb-row-grid">
+      <div class="lb-rank">#6</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#e67e22,#f39c12);width:36px;height:36px;font-size:.78rem">FO</div>
+      <div><div class="lb-name">Fatima Omar</div><div class="lb-sub">Sukuk Markets</div></div>
+      <div class="lb-xp">1,870</div>
+      <div class="lb-quizzes">140</div>
+      <div class="lb-change down">↓ 2</div>
+    </div>
+
+    <!-- Gap row -->
+    <div style="padding:10px 18px;background:var(--bg);border-bottom:1px solid var(--border);border-top:1px solid var(--border)">
+      <p style="font-size:.78rem;color:var(--slate);text-align:center">Ranks #7 through #11 — you're 120 XP from #11!</p>
+    </div>
+
+    <!-- Your row -->
+    <div class="lb-row-grid you">
+      <div class="lb-rank" style="color:var(--primary)">#12</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,var(--yellow-dark),var(--coral));width:36px;height:36px;font-size:.78rem;border:2px solid var(--primary)">AR</div>
+      <div>
+        <div class="lb-name" style="color:var(--primary)">Abdullah Rashid <span class="badge badge-primary" style="font-size:.65rem;padding:2px 7px;vertical-align:middle;margin-left:4px">You</span></div>
+        <div class="lb-sub">DAG Fundamentals</div>
+      </div>
+      <div class="lb-xp">1,840</div>
+      <div class="lb-quizzes">42</div>
+      <div class="lb-change up">↑ 4</div>
+    </div>
+
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">←</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">→</button>
+  </div>
+
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

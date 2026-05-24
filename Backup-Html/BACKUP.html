@@ -1,0 +1,52 @@
+<!-- ---------------------------- -->
+<!-- Question card -->
+
+<div class="question-card">
+  <div class="progress-info">
+    <span class="badge"><i class="fas fa-layer-group"></i> DAG Fundamentals · Quiz #1</span>
+    <span><i class="fas fa-clock"></i> Time per question: 45 sec</span>
+  </div>
+  <div class="question-text">
+    <i class="fas fa-question-circle" style="color: var(--secondary)"></i>
+    What is a key property of a Directed Acyclic Graph (DAG) that makes it useful for scheduling tasks?
+  </div>
+
+  <!-- options (static example) -->
+  <div class="options-list">
+    <div class="option">
+      <span class="option-radio"></span>
+      <span class="option-text">A) It contains at least one directed cycle</span>
+    </div>
+    <div class="option">
+      <span class="option-radio"></span>
+      <span class="option-text">B) It has no directed cycles, allowing topological ordering</span>
+    </div>
+    <div class="option">
+      <span class="option-radio"></span>
+      <span class="option-text">C) Every node has exactly two outgoing edges</span>
+    </div>
+    <div class="option">
+      <span class="option-radio"></span>
+      <span class="option-text">D) It can only represent linear workflows</span>
+    </div>
+  </div>
+
+  <!-- action buttons (mock interactions) -->
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px">
+    <button class="btn-primary"><i class="fas fa-check-circle"></i> Submit answer</button>
+    <button class="btn-secondary"><i class="fas fa-robot"></i> AI explanation</button>
+    <button class="btn-outline-ai"><i class="fas fa-code-branch"></i> Generate similar</button>
+  </div>
+
+  <!-- AI explanation preview (static demo) -->
+  <div class="ai-section" style="background: #fefce8; margin-top: 28px">
+    <i class="fas fa-lightbulb" style="color: var(--ai-violet)"></i> <strong>AI explanation preview</strong>
+    <p style="margin-top: 10px; font-size: 0.9rem">
+      A DAG has no directed cycles, which guarantees a topological order — essential for scheduling tasks with
+      dependencies. Option B is correct.
+    </p>
+    <div class="text-small" style="margin-top: 8px; color: var(--text-muted)">
+      <i class="fas fa-database"></i> Explanation stored in AI knowledge base
+    </div>
+  </div>
+</div>

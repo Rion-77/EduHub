@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .profile-hero { background:linear-gradient(135deg,var(--navy),#2a2a6e); padding:48px 0 72px; position:relative; overflow:hidden; }
+    .profile-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 75% 50%,rgba(92,51,246,.25) 0%,transparent 55%); }
+    .profile-avatar-lg { width:96px; height:96px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--coral)); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:900; font-size:2rem; color:#fff; border:4px solid var(--yellow); box-shadow:0 6px 28px rgba(0,0,0,.3); position:relative; z-index:1; }
+    .profile-name { font-family:var(--font-display); font-weight:900; font-size:1.7rem; color:#fff; margin-top:14px; position:relative; z-index:1; }
+    .profile-email{ color:rgba(255,255,255,.55); font-size:.88rem; margin-top:3px; position:relative; z-index:1; }
+    .profile-badges{ display:flex; gap:7px; flex-wrap:wrap; margin-top:12px; position:relative; z-index:1; }
+    .profile-content { max-width:880px; margin:-52px auto 0; padding:0 16px 72px; position:relative; z-index:10; }
+    .pstats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+    .pstat { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-lg); padding:18px; text-align:center; box-shadow:var(--shadow-sm); }
+    .pstat .val { font-family:var(--font-mono); font-size:1.55rem; font-weight:700; color:var(--navy); }
+    .pstat .lbl { font-size:.76rem; color:var(--slate); margin-top:3px; }
+    .ach-card { display:flex; align-items:center; gap:12px; padding:12px 15px; border:1.5px solid var(--border); border-radius:var(--radius-md); background:var(--surface); transition:all var(--transition); }
+    .ach-card:hover { border-color:var(--primary); box-shadow:var(--shadow-sm); }
+    .ach-icon  { font-size:1.7rem; width:48px; height:48px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .ach-icon.locked { filter:grayscale(1); opacity:.3; }
+    .ach-name  { font-family:var(--font-display); font-weight:700; font-size:.88rem; color:var(--navy); }
+    .ach-desc  { font-size:.75rem; color:var(--slate); margin-top:1px; }
+    .ach-date  { font-size:.7rem; color:var(--primary); font-weight:700; margin-top:3px; }
+    .settings-row { display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--border); gap:16px; flex-wrap:wrap; }
+    .settings-row:last-child { border-bottom:none; }
+    .settings-label { font-family:var(--font-display); font-weight:700; font-size:.88rem; color:var(--navy); }
+    .settings-desc  { font-size:.75rem; color:var(--slate); margin-top:1px; }
+    .toggle { width:42px; height:23px; border-radius:var(--radius-pill); background:var(--border); position:relative; flex-shrink:0; cursor:pointer; transition:background var(--transition); }
+    .toggle.on { background:var(--primary); }
+    .toggle::after { content:''; position:absolute; width:17px; height:17px; border-radius:50%; background:#fff; top:3px; left:3px; transition:transform var(--transition); box-shadow:0 1px 4px rgba(0,0,0,.18); }
+    .toggle.on::after { transform:translateX(19px); }
+    @media(max-width:640px) {
+      .pstats { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="courses.html">Courses</a>
+      <a href="progress.html">My Progress</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+    <div class="nav-actions"><a href="profile.html" class="nav-avatar" style="border-color:var(--primary)">AR</a></div>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav"><div class="mobile-nav-inner">
+  <div class="mobile-nav-user"><div class="nav-avatar">AR</div><div><div class="mobile-nav-user-name">Abdullah Rashid</div><div class="mobile-nav-user-email">abdullah@example.com</div></div></div>
+  <div class="mobile-nav-section">Navigation</div>
+  <a href="dashboard.html"    class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
+  <a href="courses.html"      class="mobile-nav-link"><span class="icon">📚</span> Courses</a>
+  <a href="progress.html"     class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
+  <a href="leaderboard.html"  class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
+  <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
+  <div class="mobile-nav-divider"></div>
+  <a href="profile.html" class="mobile-nav-link active"><span class="icon">👤</span> Profile</a>
+  <a href="login.html"   class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+</div></div>
+
+<!-- Hero -->
+<div class="profile-hero">
+  <div class="container" style="position:relative;z-index:1">
+    <div class="profile-avatar-lg">AR</div>
+    <!-- PHP: echo $user->name, $user->email, $user->student_id -->
+    <div class="profile-name">Abdullah Rashid</div>
+    <div class="profile-email">abdullah.rashid@example.com · Student ID: IsDB-2024-0042</div>
+    <div class="profile-badges">
+      <span class="badge badge-yellow">🔥 7-Day Streak</span>
+      <span class="badge badge-green">✓ Verified Student</span>
+      <span class="badge badge-primary">🏅 Rank #12</span>
+      <span class="badge badge-navy">📚 8 Courses</span>
+    </div>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="profile-content">
+
+  <!-- Stats -->
+  <div class="pstats anim-fade-up">
+    <div class="pstat"><div class="val">42</div><div class="lbl">📝 Quizzes Taken</div></div>
+    <div class="pstat"><div class="val">78%</div><div class="lbl">⭐ Avg Score</div></div>
+    <div class="pstat"><div class="val">1,840</div><div class="lbl">⚡ Total XP</div></div>
+    <div class="pstat"><div class="val">2</div><div class="lbl">🎓 Completed</div></div>
+  </div>
+
+  <div class="grid-2 anim-fade-up delay-1" style="align-items:start;margin-bottom:20px">
+
+    <!-- Achievements -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h3>🏅 Achievements</h3>
+        <span class="badge badge-primary">6 / 12 earned</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <!-- PHP: foreach ($achievements as $a) -->
+        <div class="ach-card"><div class="ach-icon">🌟</div><div><div class="ach-name">First Quiz!</div><div class="ach-desc">Completed your very first quiz</div><div class="ach-date">Earned Jan 5, 2025</div></div></div>
+        <div class="ach-card"><div class="ach-icon">🔥</div><div><div class="ach-name">On Fire</div><div class="ach-desc">Maintained a 7-day quiz streak</div><div class="ach-date">Earned May 20, 2025</div></div></div>
+        <div class="ach-card"><div class="ach-icon">💯</div><div><div class="ach-name">Perfect Score</div><div class="ach-desc">Got 100% on a quiz</div><div class="ach-date">Earned Mar 12, 2025</div></div></div>
+        <div class="ach-card"><div class="ach-icon">🏆</div><div><div class="ach-name">Top 20</div><div class="ach-desc">Reached top 20 on the leaderboard</div><div class="ach-date">Earned Apr 28, 2025</div></div></div>
+        <div class="ach-card"><div class="ach-icon locked">🎓</div><div><div class="ach-name" style="color:var(--slate)">Course Master</div><div class="ach-desc">Complete 5 courses — 3 more to go</div><div class="ach-date" style="color:var(--slate)">Locked</div></div></div>
+        <div class="ach-card"><div class="ach-icon locked">👑</div><div><div class="ach-name" style="color:var(--slate)">Top 10</div><div class="ach-desc">Reach rank #10 globally — almost!</div><div class="ach-date" style="color:var(--slate)">Locked</div></div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px">
+
+      <!-- Edit Profile — PHP: action="update_profile.php" method="POST" -->
+      <div class="card">
+        <!-- Tabs for profile sections -->
+        <div class="tabs" data-tabs style="margin-bottom:20px">
+          <span class="tab-link active" data-tab="edit">✏️ Edit Profile</span>
+          <span class="tab-link" data-tab="notifs">🔔 Notifications</span>
+          <span class="tab-link" data-tab="security">🔒 Security</span>
+        </div>
+
+        <div class="tab-panel active" data-tab-panel="edit">
+          <div class="form-group"><label class="form-label">Display Name</label><input class="form-input" type="text" name="name" value="Abdullah Rashid"/></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" name="email" value="abdullah.rashid@example.com"/></div>
+          <div class="form-group"><label class="form-label">Student ID</label><input class="form-input" type="text" name="student_id" value="IsDB-2024-0042"/></div>
+          <div class="form-group"><label class="form-label">Bio <span style="color:var(--slate);font-weight:400">(optional)</span></label><textarea class="form-textarea" name="bio" style="min-height:76px">IsDB student focused on Islamic Finance and DAG methods.</textarea></div>
+          <button class="btn btn-primary">Save Changes</button>
+        </div>
+
+        <div class="tab-panel" data-tab-panel="notifs">
+          <div class="settings-row"><div><div class="settings-label">Leaderboard Updates</div><div class="settings-desc">Get notified when your rank changes</div></div><div class="toggle on"></div></div>
+          <div class="settings-row"><div><div class="settings-label">Streak Reminders</div><div class="settings-desc">Daily reminder to keep your streak alive</div></div><div class="toggle on"></div></div>
+          <div class="settings-row"><div><div class="settings-label">New Course Alerts</div><div class="settings-desc">When new courses are added to EduHub</div></div><div class="toggle"></div></div>
+          <div class="settings-row"><div><div class="settings-label">AI Quiz Ready</div><div class="settings-desc">When your AI-generated quiz is ready</div></div><div class="toggle on"></div></div>
+        </div>
+
+        <div class="tab-panel" data-tab-panel="security">
+          <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="Enter current password"/></div>
+          <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" placeholder="Enter new password"/></div>
+          <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" placeholder="Re-enter new password"/></div>
+          <button class="btn btn-primary">Update Password</button>
+          <hr style="border:none;border-top:1px solid var(--border);margin:20px 0"/>
+          <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <a href="login.html" class="btn btn-ghost btn-sm" style="color:var(--coral)">🚪 Log Out</a>
+            <button class="btn btn-sm" style="background:var(--coral-faint);color:var(--coral);border:1.5px solid rgba(255,107,107,.3)">Delete Account</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

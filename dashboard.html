@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .welcome-banner { background:linear-gradient(135deg,var(--primary),var(--primary-light)); border-radius:var(--radius-xl); padding:28px 32px; color:#fff; position:relative; overflow:hidden; margin-bottom:28px; }
+    .welcome-banner::after { content:'🎓'; position:absolute; right:32px; top:50%; transform:translateY(-50%); font-size:4.5rem; opacity:.12; }
+    .welcome-banner h2 { color:#fff; font-size:1.5rem; }
+    .welcome-banner p  { color:rgba(255,255,255,.78); margin-top:5px; }
+    .streak-pill { display:inline-flex;align-items:center;gap:6px; background:rgba(255,255,255,.18); padding:5px 13px; border-radius:var(--radius-pill); font-family:var(--font-display);font-weight:700;font-size:.85rem;color:#fff; margin-top:14px; }
+    .recent-quiz-row { display:flex;align-items:center;gap:13px; padding:12px 0; border-bottom:1px solid var(--border); }
+    .recent-quiz-row:last-child { border-bottom:none; }
+    .rq-icon { width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.05rem;background:var(--primary-faint);flex-shrink:0; }
+    .rq-title { font-family:var(--font-display);font-weight:700;font-size:.88rem;color:var(--navy); }
+    .rq-meta  { font-size:.75rem;color:var(--slate);margin-top:1px; }
+    .rq-score { font-family:var(--font-mono);font-weight:700;font-size:.88rem;margin-left:auto;flex-shrink:0; }
+    .activity-grid { display:grid;grid-template-columns:repeat(12,1fr);gap:5px;margin-top:10px; }
+    .activity-dot { aspect-ratio:1;border-radius:4px;background:var(--border); }
+    .activity-dot.done  { background:var(--primary); }
+    .activity-dot.great { background:var(--green); }
+    .quick-action { display:flex;align-items:center;gap:11px;padding:13px 16px;border-radius:var(--radius-md);background:var(--bg);border:1.5px solid var(--border);transition:all var(--transition);font-family:var(--font-display);font-weight:700;font-size:.88rem;color:var(--navy); }
+    .quick-action:hover { border-color:var(--primary);color:var(--primary);background:var(--primary-faint);transform:translateX(4px); }
+    .quick-action .qa-arrow { margin-left:auto;color:var(--slate); }
+    .mini-lb-row { display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border); }
+    .mini-lb-row:last-child { border-bottom:none; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
+    <div class="nav-links">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="courses.html">Courses</a>
+      <a href="progress.html">My Progress</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="ai-generator.html">AI Tools</a>
+    </div>
+    <div class="nav-actions"><a href="profile.html" class="nav-avatar">AR</a></div>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-inner">
+    <div class="mobile-nav-user">
+      <div class="nav-avatar">AR</div>
+      <div><div class="mobile-nav-user-name">Abdullah Rashid</div><div class="mobile-nav-user-email">abdullah@example.com</div></div>
+    </div>
+    <div class="mobile-nav-section">Navigation</div>
+    <a href="dashboard.html"   class="mobile-nav-link active"><span class="icon">🏠</span> Dashboard</a>
+    <a href="courses.html"     class="mobile-nav-link"><span class="icon">📚</span> Courses</a>
+    <a href="progress.html"    class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
+    <a href="leaderboard.html" class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
+    <a href="ai-generator.html"class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
+    <div class="mobile-nav-divider"></div>
+    <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
+    <a href="login.html"   class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+  </div>
+</div>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-section-title">Main</div>
+    <a href="dashboard.html"   class="sidebar-link active"><span class="icon">🏠</span> Dashboard</a>
+    <a href="courses.html"     class="sidebar-link"><span class="icon">📚</span> Courses</a>
+    <a href="progress.html"    class="sidebar-link"><span class="icon">📈</span> My Progress</a>
+    <a href="leaderboard.html" class="sidebar-link"><span class="icon">🏆</span> Leaderboard</a>
+    <div class="sidebar-section-title">AI Tools</div>
+    <a href="ai-generator.html" class="sidebar-link"><span class="icon">✨</span> AI Quiz Generator</a>
+    <a href="ai-generator.html" class="sidebar-link"><span class="icon">💡</span> AI Explanations</a>
+    <div class="sidebar-section-title">Account</div>
+    <a href="profile.html" class="sidebar-link"><span class="icon">👤</span> Profile</a>
+    <a href="login.html"   class="sidebar-link"><span class="icon">🚪</span> Log Out</a>
+  </aside>
+
+  <main class="page-content">
+    <!-- Welcome -->
+    <div class="welcome-banner anim-fade-up">
+      <h2>Good morning, Abdullah! 👋</h2>
+      <p>You have 3 quizzes pending in your enrolled courses.</p>
+      <div class="streak-pill">🔥 7-day streak — keep it up!</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid-4 anim-fade-up delay-1" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon purple">📝</div><div><div class="stat-value">42</div><div class="stat-label">Quizzes Taken</div><div class="stat-delta">↑ 5 this week</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">⭐</div><div><div class="stat-value">78%</div><div class="stat-label">Avg. Score</div><div class="stat-delta">↑ 3% vs last week</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">🎯</div><div><div class="stat-value">8</div><div class="stat-label">Courses Enrolled</div><div class="stat-delta">2 completed</div></div></div>
+      <div class="stat-card"><div class="stat-icon coral">🏅</div><div><div class="stat-value">#12</div><div class="stat-label">Global Rank</div><div class="stat-delta">↑ 4 positions</div></div></div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid-2 anim-fade-up delay-2" style="margin-bottom:24px;align-items:start">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><h3>Recent Quizzes</h3><a href="progress.html" class="btn btn-ghost btn-sm">View all →</a></div>
+        <!-- PHP: foreach ($recent_quizzes as $q) -->
+        <div class="recent-quiz-row"><div class="rq-icon">📊</div><div><div class="rq-title">DAG Fundamentals – Module 3</div><div class="rq-meta">2 hours ago · 10 questions</div></div><span class="rq-score text-green">9/10</span></div>
+        <div class="recent-quiz-row"><div class="rq-icon">🕌</div><div><div class="rq-title">Islamic Finance Basics</div><div class="rq-meta">Yesterday · 15 questions</div></div><span class="rq-score" style="color:var(--yellow-dark)">11/15</span></div>
+        <div class="recent-quiz-row"><div class="rq-icon">💹</div><div><div class="rq-title">Zakat Principles &amp; Calculation</div><div class="rq-meta">2 days ago · 12 questions</div></div><span class="rq-score text-coral">7/12</span></div>
+        <div class="recent-quiz-row"><div class="rq-icon">📜</div><div><div class="rq-title">Sukuk &amp; Bond Markets</div><div class="rq-meta">3 days ago · 8 questions</div></div><span class="rq-score text-green">8/8</span></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><h3>Course Progress</h3><a href="courses.html" class="btn btn-ghost btn-sm">All →</a></div>
+        <!-- PHP: foreach ($enrolled_courses as $c) -->
+        <div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem">📊 DAG Fundamentals</span><span style="font-family:var(--font-mono);font-size:.8rem;color:var(--primary)">62%</span></div><div class="progress-bar"><div class="progress-fill" style="width:62%"></div></div></div>
+        <div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem">🕌 Islamic Finance</span><span style="font-family:var(--font-mono);font-size:.8rem;color:var(--primary)">88%</span></div><div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div></div>
+        <div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem">💹 Zakat Studies</span><span style="font-family:var(--font-mono);font-size:.8rem;color:var(--yellow-dark)">45%</span></div><div class="progress-bar"><div class="progress-fill yellow" style="width:45%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem">📜 Sukuk Markets</span><span style="font-family:var(--font-mono);font-size:.8rem;color:var(--green-dark)">100%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2 anim-fade-up delay-3" style="align-items:start">
+      <div class="card">
+        <h3 style="margin-bottom:14px">Quick Actions</h3>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <a href="quiz.html"         class="quick-action"><span>📝</span> Start a New Quiz <span class="qa-arrow">→</span></a>
+          <a href="ai-generator.html" class="quick-action"><span>✨</span> Generate AI Quiz <span class="qa-arrow">→</span></a>
+          <a href="courses.html"      class="quick-action"><span>📚</span> Browse Courses <span class="qa-arrow">→</span></a>
+          <a href="leaderboard.html"  class="quick-action"><span>🏆</span> View Leaderboard <span class="qa-arrow">→</span></a>
+          <a href="progress.html"     class="quick-action"><span>📊</span> Progress Report <span class="qa-arrow">→</span></a>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><h3>🏆 Top Students</h3><a href="leaderboard.html" class="btn btn-ghost btn-sm">Full →</a></div>
+          <div class="mini-lb-row"><span style="font-family:var(--font-mono);font-weight:700;color:#c9a800;width:22px">#1</span><div class="lb-avatar" style="background:linear-gradient(135deg,var(--primary),var(--coral));width:30px;height:30px;font-size:.75rem">RA</div><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem;flex:1">Rahman A.</span><span style="font-family:var(--font-mono);font-size:.82rem;color:var(--primary)">2,480</span></div>
+          <div class="mini-lb-row"><span style="font-family:var(--font-mono);font-weight:700;color:#8090a0;width:22px">#2</span><div class="lb-avatar" style="background:linear-gradient(135deg,var(--green-dark),#0ea5e9);width:30px;height:30px;font-size:.75rem">SH</div><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem;flex:1">Sara H.</span><span style="font-family:var(--font-mono);font-size:.82rem;color:var(--primary)">2,310</span></div>
+          <div class="mini-lb-row" style="background:rgba(92,51,246,.04);border-radius:var(--radius-sm);padding:9px 8px;border-bottom:none"><span style="font-family:var(--font-mono);font-weight:700;color:var(--primary);width:22px">#12</span><div class="lb-avatar" style="background:linear-gradient(135deg,var(--yellow-dark),var(--coral));width:30px;height:30px;font-size:.75rem;border:2px solid var(--primary)">AR</div><span style="font-family:var(--font-display);font-weight:700;font-size:.86rem;flex:1">You</span><span style="font-family:var(--font-mono);font-size:.82rem;color:var(--primary)">1,840</span></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:5px">Activity – Last 12 Days</h3>
+          <p style="font-size:.75rem;margin-bottom:8px">Each dot = one quiz completed</p>
+          <div class="activity-grid">
+            <div class="activity-dot done"></div><div class="activity-dot great"></div><div class="activity-dot"></div><div class="activity-dot done"></div><div class="activity-dot great"></div><div class="activity-dot done"></div><div class="activity-dot"></div><div class="activity-dot done"></div><div class="activity-dot great"></div><div class="activity-dot done"></div><div class="activity-dot great"></div><div class="activity-dot done"></div>
+          </div>
+          <div style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:4px;font-size:.73rem;color:var(--slate)"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary);display:inline-block"></span>Done</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:.73rem;color:var(--slate)"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span>Perfect</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:.73rem;color:var(--slate)"><span style="width:10px;height:10px;border-radius:50%;background:var(--border);display:inline-block"></span>Missed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

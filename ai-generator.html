@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Quiz Generator – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .ai-hero { background:linear-gradient(135deg,rgba(92,51,246,.06),rgba(255,107,107,.03),rgba(255,217,74,.05)); border-bottom:1.5px solid var(--border); padding:48px 0 36px; }
+    .gen-layout { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; margin-top:36px; }
+    .gen-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-xl); padding:28px; box-shadow:var(--shadow-sm); }
+    .diff-grid  { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+    .diff-option { border:2px solid var(--border); border-radius:var(--radius-md); padding:11px; text-align:center; cursor:pointer; transition:all var(--transition); }
+    .diff-option:hover  { border-color:var(--primary); }
+    .diff-option.active { border-color:var(--primary); background:var(--primary-faint); }
+    .diff-option input  { display:none; }
+    .diff-emoji  { font-size:1.3rem; }
+    .diff-label  { font-family:var(--font-display); font-weight:700; font-size:.8rem; color:var(--navy); margin-top:3px; }
+    .qtype-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .qtype-opt  { border:2px solid var(--border); border-radius:var(--radius-md); padding:10px 13px; cursor:pointer; transition:all var(--transition); display:flex; align-items:center; gap:9px; }
+    .qtype-opt:hover  { border-color:var(--primary); }
+    .qtype-opt.active { border-color:var(--primary); background:var(--primary-faint); }
+    .qtype-opt input  { display:none; }
+    .qtype-check { width:17px; height:17px; border-radius:4px; border:2px solid var(--border); margin-left:auto; flex-shrink:0; transition:all var(--transition); }
+    .qtype-opt.active .qtype-check { background:var(--primary); border-color:var(--primary); }
+    .gen-btn { width:100%; padding:15px; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:#fff; border-radius:var(--radius-lg); font-family:var(--font-display); font-weight:800; font-size:.97rem; box-shadow:0 4px 18px rgba(92,51,246,.28); transition:all var(--transition); display:flex; align-items:center; justify-content:center; gap:9px; }
+    .gen-btn:hover { transform:translateY(-2px); box-shadow:0 8px 26px rgba(92,51,246,.36); }
+    .preview-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-xl); padding:28px; box-shadow:var(--shadow-sm); position:sticky; top:calc(var(--nav-h) + 20px); }
+    .gen-q { border:1.5px solid var(--border); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:10px; transition:all var(--transition); }
+    .gen-q:hover { border-color:var(--primary); box-shadow:var(--shadow-sm); }
+    .gen-q-num  { font-family:var(--font-mono); font-size:.75rem; color:var(--primary); font-weight:700; margin-bottom:5px; }
+    .gen-q-text { font-family:var(--font-display); font-weight:700; font-size:.88rem; color:var(--navy); line-height:1.4; }
+    .gen-q-type { display:inline-block; margin-top:7px; font-size:.7rem; font-family:var(--font-display); font-weight:700; color:var(--slate); background:var(--bg); padding:2px 9px; border-radius:var(--radius-pill); border:1px solid var(--border); }
+    .hist-item  { display:flex; align-items:center; gap:11px; padding:11px 0; border-bottom:1px solid var(--border); }
+    .hist-item:last-child { border-bottom:none; }
+    .hist-icon  { width:34px; height:34px; border-radius:var(--radius-sm); background:var(--primary-faint); display:flex; align-items:center; justify-content:center; font-size:.88rem; flex-shrink:0; }
+    .hist-title { font-family:var(--font-display); font-weight:700; font-size:.86rem; color:var(--navy); }
+    .hist-meta  { font-size:.73rem; color:var(--slate); margin-top:1px; }
+    @media(max-width:900px) {
+      .gen-layout { grid-template-columns:1fr; }
+      .preview-card { position:static; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="courses.html">Courses</a>
+      <a href="progress.html">My Progress</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="ai-generator.html" class="active">AI Tools</a>
+    </div>
+    <div class="nav-actions"><a href="profile.html" class="nav-avatar">AR</a></div>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav"><div class="mobile-nav-inner">
+  <div class="mobile-nav-user"><div class="nav-avatar">AR</div><div><div class="mobile-nav-user-name">Abdullah Rashid</div><div class="mobile-nav-user-email">abdullah@example.com</div></div></div>
+  <div class="mobile-nav-section">Navigation</div>
+  <a href="dashboard.html"    class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
+  <a href="courses.html"      class="mobile-nav-link"><span class="icon">📚</span> Courses</a>
+  <a href="progress.html"     class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
+  <a href="leaderboard.html"  class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
+  <a href="ai-generator.html" class="mobile-nav-link active"><span class="icon">✨</span> AI Tools</a>
+  <div class="mobile-nav-divider"></div>
+  <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
+  <a href="login.html"   class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+</div></div>
+
+<!-- Hero -->
+<div class="ai-hero">
+  <div class="container">
+    <div class="ai-label" style="margin-bottom:12px"><span class="ai-dot"></span> AI-Powered</div>
+    <h1>AI Quiz Generator</h1>
+    <p style="max-width:500px;margin-top:9px">Generate custom quizzes on any IsDB topic instantly — your personal quiz creator available 24/7.</p>
+    <div style="display:flex;gap:14px;margin-top:24px;flex-wrap:wrap">
+      <div class="stat-card" style="padding:12px 18px;display:inline-flex;gap:10px;align-items:center"><div style="font-family:var(--font-mono);font-weight:700;font-size:1.15rem;color:var(--primary)">1,240+</div><div style="font-size:.76rem;color:var(--slate)">Quizzes Generated</div></div>
+      <div class="stat-card" style="padding:12px 18px;display:inline-flex;gap:10px;align-items:center"><div style="font-family:var(--font-mono);font-weight:700;font-size:1.15rem;color:var(--green-dark)">98%</div><div style="font-size:.76rem;color:var(--slate)">Accuracy Rate</div></div>
+      <div class="stat-card" style="padding:12px 18px;display:inline-flex;gap:10px;align-items:center"><div style="font-family:var(--font-mono);font-weight:700;font-size:1.15rem;color:var(--yellow-dark)">~3s</div><div style="font-size:.76rem;color:var(--slate)">Generation Time</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:0;padding-bottom:72px">
+  <div class="gen-layout">
+
+    <!-- Form -->
+    <div>
+      <!-- PHP: form action="generate_quiz.php" method="POST" -->
+      <div class="gen-card anim-fade-up">
+        <h3 style="margin-bottom:20px">⚙️ Configure Your Quiz</h3>
+
+        <div class="form-group">
+          <label class="form-label">📖 Topic or Subject</label>
+          <input class="form-input" type="text" name="topic" placeholder="e.g. Murabaha in Islamic Finance, Zakat on Gold…"/>
+          <div class="form-hint">Be specific for better quality questions.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">🔢 Number of Questions</label>
+          <select class="form-select" name="count">
+            <option value="5">5 questions</option>
+            <option value="10" selected>10 questions</option>
+            <option value="15">15 questions</option>
+            <option value="20">20 questions</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom:10px">🎯 Difficulty Level</label>
+          <div class="diff-grid">
+            <label class="diff-option">
+              <input type="radio" name="difficulty" value="easy"/>
+              <div class="diff-emoji">🟢</div><div class="diff-label">Easy</div>
+            </label>
+            <label class="diff-option active">
+              <input type="radio" name="difficulty" value="medium" checked/>
+              <div class="diff-emoji">🟡</div><div class="diff-label">Medium</div>
+            </label>
+            <label class="diff-option">
+              <input type="radio" name="difficulty" value="hard"/>
+              <div class="diff-emoji">🔴</div><div class="diff-label">Hard</div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom:10px">❓ Question Types</label>
+          <div class="qtype-grid">
+            <label class="qtype-opt active">
+              <input type="checkbox" name="types[]" value="mcq" checked/>
+              <span>🔘</span><span style="font-family:var(--font-display);font-weight:700;font-size:.82rem">Multiple Choice</span>
+              <div class="qtype-check"></div>
+            </label>
+            <label class="qtype-opt">
+              <input type="checkbox" name="types[]" value="tf"/>
+              <span>✅</span><span style="font-family:var(--font-display);font-weight:700;font-size:.82rem">True / False</span>
+              <div class="qtype-check"></div>
+            </label>
+            <label class="qtype-opt">
+              <input type="checkbox" name="types[]" value="fill"/>
+              <span>✏️</span><span style="font-family:var(--font-display);font-weight:700;font-size:.82rem">Fill in Blank</span>
+              <div class="qtype-check"></div>
+            </label>
+            <label class="qtype-opt">
+              <input type="checkbox" name="types[]" value="short"/>
+              <span>📝</span><span style="font-family:var(--font-display);font-weight:700;font-size:.82rem">Short Answer</span>
+              <div class="qtype-check"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">📂 Save to Course <span style="color:var(--slate);font-weight:400">(optional)</span></label>
+          <select class="form-select" name="course_id">
+            <option value="">— Don't save to a course —</option>
+            <option value="1">DAG Fundamentals</option>
+            <option value="2">Islamic Finance Basics</option>
+            <option value="3">Zakat Studies</option>
+            <option value="4">Sukuk &amp; Capital Markets</option>
+          </select>
+          <div class="form-hint">AI can add the generated quiz directly to the course database.</div>
+        </div>
+
+        <button class="gen-btn" type="submit">✨ Generate Quiz Now</button>
+      </div>
+
+      <!-- History -->
+      <div class="gen-card anim-fade-up delay-2" style="margin-top:18px">
+        <h3 style="margin-bottom:14px">🕐 Recent Generations</h3>
+        <!-- PHP: foreach ($ai_history as $h) -->
+        <div class="hist-item"><div class="hist-icon">🕌</div><div style="flex:1"><div class="hist-title">Islamic Finance – Murabaha</div><div class="hist-meta">10 questions · Medium · 2 hours ago</div></div><a href="quiz.html" class="btn btn-outline btn-sm">Take →</a></div>
+        <div class="hist-item"><div class="hist-icon">📊</div><div style="flex:1"><div class="hist-title">DAG Traversal Algorithms</div><div class="hist-meta">5 questions · Hard · Yesterday</div></div><a href="quiz.html" class="btn btn-outline btn-sm">Take →</a></div>
+        <div class="hist-item"><div class="hist-icon">💹</div><div style="flex:1"><div class="hist-title">Zakat on Business Assets</div><div class="hist-meta">15 questions · Easy · 3 days ago</div></div><a href="quiz.html" class="btn btn-outline btn-sm">Take →</a></div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-card anim-fade-up delay-1">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h3>📋 Generated Preview</h3>
+        <span class="badge badge-green">✓ Ready</span>
+      </div>
+      <div class="alert alert-info" style="margin-bottom:16px">
+        <span>✨</span><span>Sample: <strong>Murabaha in Islamic Finance</strong> · 10 questions · Medium</span>
+      </div>
+
+      <!-- PHP: foreach ($preview_questions as $i => $pq) -->
+      <div class="gen-q"><div class="gen-q-num">Q1 · Multiple Choice</div><div class="gen-q-text">What is the primary characteristic that distinguishes Murabaha from conventional loans?</div><span class="gen-q-type">🔘 MCQ</span></div>
+      <div class="gen-q"><div class="gen-q-num">Q2 · Multiple Choice</div><div class="gen-q-text">In a Murabaha transaction, who bears the ownership risk between purchase and resale?</div><span class="gen-q-type">🔘 MCQ</span></div>
+      <div class="gen-q"><div class="gen-q-num">Q3 · Multiple Choice</div><div class="gen-q-text">Which condition is NOT required for a Murabaha contract to be Sharia-compliant?</div><span class="gen-q-type">🔘 MCQ</span></div>
+      <div style="text-align:center;padding:10px;color:var(--slate);font-size:.83rem;background:var(--bg);border-radius:var(--radius-md)">+ 7 more questions</div>
+
+      <div style="display:flex;gap:9px;margin-top:18px;flex-wrap:wrap">
+        <a href="quiz.html" class="btn btn-primary" style="flex:1;justify-content:center">▶ Start Quiz</a>
+        <button class="btn btn-outline" style="flex:1;justify-content:center">💾 Save to Course</button>
+      </div>
+      <button class="btn btn-ghost w-full" style="margin-top:9px;justify-content:center">🔄 Regenerate</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

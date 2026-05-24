@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Progress – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .cal-header { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-bottom:4px; }
+    .cal-header span { font-family:var(--font-display); font-weight:800; font-size:.68rem; color:var(--slate); text-align:center; text-transform:uppercase; }
+    .cal-grid   { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+    .cal-day    { aspect-ratio:1; border-radius:5px; background:var(--border); }
+    .cal-day.l1 { background:rgba(92,51,246,.2); }
+    .cal-day.l2 { background:rgba(92,51,246,.45); }
+    .cal-day.l3 { background:rgba(92,51,246,.7); }
+    .cal-day.l4 { background:var(--primary); }
+    .cal-day.today { outline:2px solid var(--yellow); outline-offset:2px; }
+    .cp-row { display:flex; align-items:center; gap:14px; padding:15px 0; border-bottom:1px solid var(--border); }
+    .cp-row:last-child { border-bottom:none; }
+    .cp-icon { width:40px; height:40px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:1.1rem; background:var(--primary-faint); flex-shrink:0; }
+    .cp-name { font-family:var(--font-display); font-weight:700; font-size:.9rem; color:var(--navy); margin-bottom:5px; }
+    .cp-meta { font-size:.75rem; color:var(--slate); }
+    .str-label { font-family:var(--font-display); font-weight:700; font-size:.84rem; color:var(--navy); display:flex; justify-content:space-between; margin-bottom:5px; }
+    .hist-row { display:grid; grid-template-columns:2fr 90px 70px 80px 70px; gap:10px; align-items:center; padding:12px 18px; border-bottom:1px solid var(--border); transition:background var(--transition); }
+    .hist-row:hover { background:rgba(92,51,246,.03); }
+    .hist-row:last-child { border-bottom:none; }
+    .hist-row .q-name { font-family:var(--font-display); font-weight:700; font-size:.87rem; color:var(--navy); }
+    .hist-row .q-sub  { font-size:.73rem; color:var(--slate); margin-top:1px; }
+    .score-pill { display:inline-flex; align-items:center; font-family:var(--font-mono); font-weight:700; font-size:.8rem; padding:3px 9px; border-radius:var(--radius-pill); }
+    .score-pill.high   { background:var(--green-faint);  color:var(--green-dark); }
+    .score-pill.medium { background:var(--yellow-faint); color:#7a5500; }
+    .score-pill.low    { background:var(--coral-faint);  color:#b02020; }
+    .hist-time { font-family:var(--font-mono); font-size:.8rem; color:var(--slate); }
+    .hist-date { font-size:.8rem; color:var(--slate); }
+    /* hide columns on mobile */
+    @media(max-width:640px) {
+      .hist-row { grid-template-columns:1fr 80px 60px; }
+      .hist-row .hide-sm { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="courses.html">Courses</a>
+      <a href="progress.html" class="active">My Progress</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="ai-generator.html">AI Tools</a>
+    </div>
+    <div class="nav-actions"><a href="profile.html" class="nav-avatar">AR</a></div>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav"><div class="mobile-nav-inner">
+  <div class="mobile-nav-user"><div class="nav-avatar">AR</div><div><div class="mobile-nav-user-name">Abdullah Rashid</div><div class="mobile-nav-user-email">abdullah@example.com</div></div></div>
+  <div class="mobile-nav-section">Navigation</div>
+  <a href="dashboard.html"    class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
+  <a href="courses.html"      class="mobile-nav-link"><span class="icon">📚</span> Courses</a>
+  <a href="progress.html"     class="mobile-nav-link active"><span class="icon">📈</span> My Progress</a>
+  <a href="leaderboard.html"  class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
+  <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
+  <div class="mobile-nav-divider"></div>
+  <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
+  <a href="login.html"   class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+</div></div>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-section-title">Main</div>
+    <a href="dashboard.html"   class="sidebar-link"><span class="icon">🏠</span> Dashboard</a>
+    <a href="courses.html"     class="sidebar-link"><span class="icon">📚</span> Courses</a>
+    <a href="progress.html"    class="sidebar-link active"><span class="icon">📈</span> My Progress</a>
+    <a href="leaderboard.html" class="sidebar-link"><span class="icon">🏆</span> Leaderboard</a>
+    <div class="sidebar-section-title">AI Tools</div>
+    <a href="ai-generator.html" class="sidebar-link"><span class="icon">✨</span> AI Quiz Generator</a>
+    <div class="sidebar-section-title">Account</div>
+    <a href="profile.html" class="sidebar-link"><span class="icon">👤</span> Profile</a>
+    <a href="login.html"   class="sidebar-link"><span class="icon">🚪</span> Log Out</a>
+  </aside>
+
+  <main class="page-content">
+
+    <div style="margin-bottom:24px">
+      <div class="section-label">My Progress</div>
+      <h2 style="margin-top:9px">Abdullah's Learning Journey</h2>
+      <p style="margin-top:5px">Track your quiz history, course completion, and areas to improve.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid-4 anim-fade-up" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon purple">📝</div><div><div class="stat-value">42</div><div class="stat-label">Total Quizzes</div><div class="stat-delta">↑ 5 this week</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">⭐</div><div><div class="stat-value">78%</div><div class="stat-label">Average Score</div><div class="stat-delta">↑ 3% vs last week</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">🔥</div><div><div class="stat-value">7</div><div class="stat-label">Day Streak</div><div class="stat-delta">Best: 14 days</div></div></div>
+      <div class="stat-card"><div class="stat-icon coral">⏱</div><div><div class="stat-value">18h</div><div class="stat-label">Time Studied</div><div class="stat-delta">↑ 2h this week</div></div></div>
+    </div>
+
+    <div class="grid-2 anim-fade-up delay-1" style="margin-bottom:24px;align-items:start">
+
+      <!-- Activity calendar -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h3>Activity Calendar</h3>
+          <span class="badge badge-primary">May 2025</span>
+        </div>
+        <div class="cal-header">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day l2"></div><div class="cal-day l1"></div><div class="cal-day l3"></div><div class="cal-day"></div><div class="cal-day l2"></div><div class="cal-day l4"></div><div class="cal-day l1"></div>
+          <div class="cal-day l3"></div><div class="cal-day l2"></div><div class="cal-day"></div><div class="cal-day l1"></div><div class="cal-day l4"></div><div class="cal-day l3"></div><div class="cal-day l2"></div>
+          <div class="cal-day"></div><div class="cal-day l1"></div><div class="cal-day l2"></div><div class="cal-day l3"></div><div class="cal-day l4"></div><div class="cal-day l2"></div><div class="cal-day l1"></div>
+          <div class="cal-day l3"></div><div class="cal-day l4"></div><div class="cal-day l2"></div><div class="cal-day l3"></div><div class="cal-day l1"></div><div class="cal-day l2"></div><div class="cal-day today l4"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:11px;flex-wrap:wrap">
+          <span style="font-size:.73rem;color:var(--slate)">Less</span>
+          <div style="width:13px;height:13px;border-radius:3px;background:var(--border)"></div>
+          <div style="width:13px;height:13px;border-radius:3px;background:rgba(92,51,246,.2)"></div>
+          <div style="width:13px;height:13px;border-radius:3px;background:rgba(92,51,246,.45)"></div>
+          <div style="width:13px;height:13px;border-radius:3px;background:rgba(92,51,246,.7)"></div>
+          <div style="width:13px;height:13px;border-radius:3px;background:var(--primary)"></div>
+          <span style="font-size:.73rem;color:var(--slate)">More</span>
+          <span style="font-size:.73rem;color:var(--yellow-dark);font-weight:700;margin-left:6px">■ Today</span>
+        </div>
+      </div>
+
+      <!-- Topic strengths -->
+      <div class="card">
+        <h3 style="margin-bottom:14px">Topic Strengths</h3>
+        <div style="margin-bottom:13px"><div class="str-label"><span>📜 Sukuk &amp; Capital Markets</span><span style="color:var(--green-dark)">92%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:92%"></div></div></div>
+        <div style="margin-bottom:13px"><div class="str-label"><span>🕌 Islamic Finance</span><span style="color:var(--green-dark)">85%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:85%"></div></div></div>
+        <div style="margin-bottom:13px"><div class="str-label"><span>📊 DAG Fundamentals</span><span style="color:var(--primary)">72%</span></div><div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div></div>
+        <div style="margin-bottom:13px"><div class="str-label"><span>💹 Zakat Studies</span><span style="color:var(--yellow-dark)">58%</span></div><div class="progress-bar"><div class="progress-fill yellow" style="width:58%"></div></div></div>
+        <div style="margin-bottom:4px"><div class="str-label"><span>⚖️ Islamic Ethics</span><span style="color:var(--coral)">41%</span></div><div class="progress-bar"><div class="progress-fill coral" style="width:41%"></div></div></div>
+        <div class="alert alert-warning" style="margin-top:14px;margin-bottom:0">
+          <span>💡</span><span>Focus on <strong>Zakat Studies</strong> and <strong>Islamic Ethics</strong> to boost your average.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course completion -->
+    <div class="card anim-fade-up delay-2" style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><h3>Course Completion</h3><a href="courses.html" class="btn btn-ghost btn-sm">Browse more →</a></div>
+      <!-- PHP: foreach ($enrolled_courses as $c) -->
+      <div class="cp-row"><div class="cp-icon">📊</div><div style="flex:1"><div class="cp-name">DAG Fundamentals</div><div class="cp-meta">5 of 8 modules · 50 of 80 questions</div><div class="progress-bar" style="margin-top:7px"><div class="progress-fill" style="width:62%"></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:var(--font-mono);font-weight:700;font-size:.88rem;color:var(--primary)">62%</div><div style="font-size:.72rem;color:var(--slate)">In progress</div></div></div>
+      <div class="cp-row"><div class="cp-icon">🕌</div><div style="flex:1"><div class="cp-name">Islamic Finance Basics</div><div class="cp-meta">9 of 10 modules · 106 of 120 questions</div><div class="progress-bar" style="margin-top:7px"><div class="progress-fill" style="width:88%"></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:var(--font-mono);font-weight:700;font-size:.88rem;color:var(--primary)">88%</div><div style="font-size:.72rem;color:var(--slate)">Almost done!</div></div></div>
+      <div class="cp-row"><div class="cp-icon">📜</div><div style="flex:1"><div class="cp-name">Sukuk &amp; Capital Markets</div><div class="cp-meta">5 of 5 modules · All complete</div><div class="progress-bar" style="margin-top:7px"><div class="progress-fill green" style="width:100%"></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:var(--font-mono);font-weight:700;font-size:.88rem;color:var(--green-dark)">100%</div><div style="font-size:.72rem;color:var(--green-dark);font-weight:700">✓ Complete</div></div></div>
+      <div class="cp-row"><div class="cp-icon">💹</div><div style="flex:1"><div class="cp-name">Zakat Principles &amp; Calculation</div><div class="cp-meta">2 of 6 modules · 18 of 60 questions</div><div class="progress-bar" style="margin-top:7px"><div class="progress-fill yellow" style="width:30%"></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:var(--font-mono);font-weight:700;font-size:.88rem;color:var(--yellow-dark)">30%</div><div style="font-size:.72rem;color:var(--slate)">In progress</div></div></div>
+    </div>
+
+    <!-- Quiz history -->
+    <div class="card anim-fade-up delay-3">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <h3>Quiz History</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <!-- PHP: GET params for filtering -->
+          <select class="form-select" style="width:auto;padding:7px 11px;font-size:.82rem" name="course">
+            <option>All Courses</option>
+            <option>DAG Fundamentals</option>
+            <option>Islamic Finance</option>
+          </select>
+          <select class="form-select" style="width:auto;padding:7px 11px;font-size:.82rem" name="period">
+            <option>All Time</option>
+            <option>This Week</option>
+            <option>This Month</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Table header -->
+      <div class="hist-row" style="background:var(--bg);border-radius:var(--radius-sm);border-bottom:1.5px solid var(--border)">
+        <div style="font-family:var(--font-display);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--slate)">Quiz</div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--slate)">Score</div>
+        <div class="hide-sm" style="font-family:var(--font-display);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--slate)">Time</div>
+        <div class="hide-sm" style="font-family:var(--font-display);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--slate)">Date</div>
+        <div></div>
+      </div>
+
+      <div style="border:1.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+        <!-- PHP: foreach ($quiz_history as $q) -->
+        <div class="hist-row"><div><div class="q-name">DAG Fundamentals – Module 3</div><div class="q-sub">10 questions · Medium</div></div><div><span class="score-pill high">9/10</span></div><div class="hist-time hide-sm">7:26</div><div class="hist-date hide-sm">Today</div><div><a href="quiz-results.html" class="btn btn-ghost btn-sm">Review</a></div></div>
+        <div class="hist-row"><div><div class="q-name">Islamic Finance – Murabaha</div><div class="q-sub">15 questions · Medium</div></div><div><span class="score-pill medium">11/15</span></div><div class="hist-time hide-sm">12:40</div><div class="hist-date hide-sm">Yesterday</div><div><a href="quiz-results.html" class="btn btn-ghost btn-sm">Review</a></div></div>
+        <div class="hist-row"><div><div class="q-name">Zakat Principles – Module 1</div><div class="q-sub">12 questions · Easy</div></div><div><span class="score-pill low">7/12</span></div><div class="hist-time hide-sm">9:15</div><div class="hist-date hide-sm">2 days ago</div><div><a href="quiz-results.html" class="btn btn-ghost btn-sm">Review</a></div></div>
+        <div class="hist-row"><div><div class="q-name">Sukuk &amp; Bond Markets – Final</div><div class="q-sub">8 questions · Hard</div></div><div><span class="score-pill high">8/8</span></div><div class="hist-time hide-sm">6:04</div><div class="hist-date hide-sm">3 days ago</div><div><a href="quiz-results.html" class="btn btn-ghost btn-sm">Review</a></div></div>
+        <div class="hist-row"><div><div class="q-name">AI Generated – Islamic Ethics</div><div class="q-sub">10 questions · Medium · ✨ AI</div></div><div><span class="score-pill medium">7/10</span></div><div class="hist-time hide-sm">8:33</div><div class="hist-date hide-sm">4 days ago</div><div><a href="quiz-results.html" class="btn btn-ghost btn-sm">Review</a></div></div>
+      </div>
+
+      <div class="pagination" style="margin-top:18px">
+        <button class="page-btn">←</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">→</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

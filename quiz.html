@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+
+    /* ── PAGE BACKGROUND: light blue-grey like reference ── */
+    body {
+      background: #dce8f5;
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════
+       STICKY TOP BAR  (progress + timer)
+    ══════════════════════════════════════ */
+    .quiz-sticky-top {
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 100;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(26,26,62,.10);
+    }
+
+    /* Info row: back arrow | title | timer | quit */
+    .quiz-info-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      flex-wrap: wrap;
+    }
+    .quiz-back-btn {
+      color: #5C33F6;
+      font-size: 1.15rem;
+      line-height: 1;
+      text-decoration: none;
+      flex-shrink: 0;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: background .15s;
+    }
+    .quiz-back-btn:hover { background: rgba(92,51,246,.08); }
+
+    .quiz-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: .92rem;
+      color: #1A1A3E;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Timer pill */
+    .quiz-timer-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff3f3;
+      border: 1.5px solid #ffc5c5;
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: .95rem;
+      color: #e53e3e;
+      flex-shrink: 0;
+      transition: background .3s;
+    }
+    .quiz-timer-pill.warning {
+      background: #fff0f0;
+      border-color: #ff4444;
+      color: #cc0000;
+      animation: timerPulse 1s ease-in-out infinite;
+    }
+    @keyframes timerPulse {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.04); }
+    }
+
+    .quiz-quit-btn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .82rem;
+      color: #e53e3e;
+      background: rgba(229,62,62,.08);
+      border: 1.5px solid rgba(229,62,62,.22);
+      border-radius: 100px;
+      padding: 5px 14px;
+      transition: all .15s;
+      flex-shrink: 0;
+    }
+    .quiz-quit-btn:hover { background: rgba(229,62,62,.16); }
+
+    /* Progress bar row */
+    .quiz-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 20px 10px;
+    }
+    .quiz-progress-track {
+      flex: 1;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .quiz-progress-bar {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #5C33F6, #7B5FF8);
+      transition: width .5s ease;
+    }
+    .quiz-progress-label {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: .78rem;
+      color: #5C33F6;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .quiz-progress-count {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .76rem;
+      color: #6B7280;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════
+       MAIN CONTENT AREA
+    ══════════════════════════════════════ */
+    .quiz-body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 28px 16px 120px; /* bottom padding for fixed submit bar */
+    }
+
+    /* ══════════════════════════════════════
+       WHITE CARD  (contains ALL questions)
+    ══════════════════════════════════════ */
+    .quiz-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(26,26,62,.10);
+      overflow: hidden;
+    }
+
+    /* ── COURSE HEADER strip inside card ── */
+    .quiz-card-header {
+      background: #5C33F6;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .quiz-card-header-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: .92rem;
+      color: #fff;
+    }
+    .quiz-card-header-meta {
+      font-size: .78rem;
+      color: rgba(255,255,255,.72);
+      font-family: var(--font-display);
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════════════════
+       INDIVIDUAL QUESTION BLOCK
+       (matches reference exactly)
+    ══════════════════════════════════════ */
+    .question-block {
+      padding: 22px 28px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .question-block:last-of-type {
+      border-bottom: none;
+    }
+
+    /* "Question N" label — blue, bold */
+    .q-label {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: .92rem;
+      color: #5C33F6;
+      margin-bottom: 6px;
+    }
+
+    /* Question text */
+    .q-text {
+      font-size: .93rem;
+      color: #374151;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    /* Options list — plain, like reference */
+    .q-options {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* Each option row */
+    .q-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .12s;
+      user-select: none;
+    }
+    .q-option:hover { background: #f0edff; }
+
+    /* Hide the real radio visually — we style the custom circle */
+    .q-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* Custom radio circle — unchecked: empty ring */
+    .q-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #9ca3af;
+      background: #fff;
+      flex-shrink: 0;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Checked state: filled blue with white inner dot */
+    .q-option input[type="radio"]:checked ~ .q-radio,
+    .q-option.selected .q-radio {
+      background: #5C33F6;
+      border-color: #5C33F6;
+    }
+    .q-option input[type="radio"]:checked ~ .q-radio::after,
+    .q-option.selected .q-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    /* Option label text */
+    .q-option-text {
+      font-size: .9rem;
+      color: #374151;
+      line-height: 1.4;
+    }
+    .q-option input[type="radio"]:checked ~ .q-option-text,
+    .q-option.selected .q-option-text {
+      color: #5C33F6;
+      font-weight: 600;
+    }
+
+    /* AI explain button per question */
+    .q-ai-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .78rem;
+      color: #5C33F6;
+      background: rgba(92,51,246,.07);
+      border: 1.5px solid rgba(92,51,246,.18);
+      border-radius: 100px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .q-ai-btn:hover { background: rgba(92,51,246,.14); }
+
+    /* ══════════════════════════════════════
+       FIXED BOTTOM BAR  (Submit + stats)
+    ══════════════════════════════════════ */
+    .quiz-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1.5px solid #e5e7eb;
+      box-shadow: 0 -4px 20px rgba(26,26,62,.10);
+      z-index: 100;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .quiz-bottom-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .bottom-stat {
+      font-size: .78rem;
+      color: #6B7280;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .bottom-stat strong {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #1A1A3E;
+    }
+
+    /* Submit button */
+    .quiz-submit-btn {
+      background: #5C33F6;
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: .95rem;
+      border-radius: 100px;
+      padding: 11px 28px;
+      border: none;
+      cursor: pointer;
+      transition: all .18s;
+      flex-shrink: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 14px rgba(92,51,246,.3);
+    }
+    .quiz-submit-btn:hover {
+      background: #4220D4;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(92,51,246,.4);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .question-block    { padding: 18px 16px; }
+      .quiz-card-header  { padding: 14px 16px; }
+      .quiz-body         { padding: 16px 10px 110px; }
+      .quiz-info-row     { padding: 8px 14px; }
+      .quiz-progress-row { padding: 6px 14px 8px; }
+      .quiz-title        { font-size: .82rem; }
+      .quiz-bottom-stats { gap: 10px; }
+      .bottom-stat       { font-size: .72rem; }
+      .quiz-submit-btn   { padding: 10px 20px; font-size: .88rem; }
+    }
+
+    @media (max-width: 400px) {
+      .quiz-bottom-stats { display: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<!-- <?php include 'includes/navbar.php'; ?> -->
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="courses.html" class="active">Courses</a>
+      <a href="progress.html">My Progress</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="ai-generator.html">AI Tools</a>
+    </div>
+    <div class="nav-actions">
+      <a href="profile.html" class="nav-avatar">AR</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav"><div class="mobile-nav-inner">
+  <div class="mobile-nav-user"><div class="nav-avatar">AR</div><div><div class="mobile-nav-user-name">Abdullah Rashid</div><div class="mobile-nav-user-email">abdullah@example.com</div></div></div>
+  <div class="mobile-nav-section">Navigation</div>
+  <a href="dashboard.html"    class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
+  <a href="courses.html"      class="mobile-nav-link active"><span class="icon">📚</span> Courses</a>
+  <a href="progress.html"     class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
+  <a href="leaderboard.html"  class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
+  <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
+  <div class="mobile-nav-divider"></div>
+  <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
+  <a href="login.html"   class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+</div></div>
+
+
+<!-- ═══ STICKY TOP BAR ═══ -->
+<!-- This whole block is sticky: sits right below the navbar -->
+<div class="quiz-sticky-top">
+
+  <!-- Row 1: back | title | timer | quit -->
+  <div class="quiz-info-row">
+    <a href="course-detail.html" class="quiz-back-btn" title="Back to course">←</a>
+    <!-- PHP: echo $quiz->course_name . ' – ' . $quiz->title -->
+    <div class="quiz-title">📊 DAG Fundamentals – Module 3 Quiz</div>
+    <!-- Timer — updated by JS countdown -->
+    <div class="quiz-timer-pill" id="quizTimer">
+      ⏱ <span id="timerDisplay">15:00</span>
+    </div>
+    <a href="quiz-results.html" class="quiz-quit-btn">Quit</a>
+  </div>
+
+  <!-- Row 2: progress bar -->
+  <!-- PHP: $pct = ($answered / $total) * 100 -->
+  <div class="quiz-progress-row">
+    <div class="quiz-progress-count" id="progressCount">0 / 10 answered</div>
+    <div class="quiz-progress-track">
+      <div class="quiz-progress-bar" id="progressBar" style="width: 0%"></div>
+    </div>
+    <div class="quiz-progress-label" id="progressPct">0%</div>
+  </div>
+
+</div><!-- /.quiz-sticky-top -->
+
+
+<!-- ═══ QUIZ BODY ═══ -->
+<div class="quiz-body">
+  <!-- PHP: foreach ($questions as $i => $q) -->
+  <div class="quiz-card">
+
+    <!-- Card header -->
+    <div class="quiz-card-header">
+      <div>
+        <div class="quiz-card-header-title">DAG Fundamentals – Module 3</div>
+        <div class="quiz-card-header-meta">10 questions · Medium difficulty · 15 min</div>
+      </div>
+      <span class="badge badge-yellow" style="font-size:.75rem">🔥 In Progress</span>
+    </div>
+
+    <!-- ─── QUESTION 1 ─── -->
+    <div class="question-block" id="qblock-1">
+      <div class="q-label">Question 1</div>
+      <div class="q-text">She _______ every morning.</div>
+      <div class="q-options" data-question="1">
+        <label class="q-option selected">
+          <input type="radio" name="q1" value="a" checked/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">walks</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q1" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">walk</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q1" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">walking</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q1" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">walked</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 2 ─── -->
+    <div class="question-block" id="qblock-2">
+      <div class="q-label">Question 2</div>
+      <div class="q-text">What does "Acyclic" mean in the context of a Directed Acyclic Graph?</div>
+      <div class="q-options" data-question="2">
+        <label class="q-option">
+          <input type="radio" name="q2" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">The graph has no nodes</span>
+        </label>
+        <label class="q-option selected">
+          <input type="radio" name="q2" value="b" checked/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">The graph contains no directed cycles — you cannot return to a starting node</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q2" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">All edges point in both directions</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q2" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">The graph must be fully connected</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 3 ─── -->
+    <div class="question-block" id="qblock-3">
+      <div class="q-label">Question 3</div>
+      <div class="q-text">In a DAG, a node with no incoming edges is called a ___.</div>
+      <div class="q-options" data-question="3">
+        <label class="q-option">
+          <input type="radio" name="q3" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Leaf node</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q3" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Sink node</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q3" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Root node</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q3" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Source node</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 4 ─── -->
+    <div class="question-block" id="qblock-4">
+      <div class="q-label">Question 4</div>
+      <div class="q-text">Which sorting algorithm is most directly associated with processing a DAG in dependency order?</div>
+      <div class="q-options" data-question="4">
+        <label class="q-option">
+          <input type="radio" name="q4" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Bubble Sort</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q4" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Merge Sort</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q4" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Topological Sort</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q4" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Quick Sort</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 5 ─── -->
+    <div class="question-block" id="qblock-5">
+      <div class="q-label">Question 5</div>
+      <div class="q-text">What is the time complexity of Topological Sort using DFS on a graph with V vertices and E edges?</div>
+      <div class="q-options" data-question="5">
+        <label class="q-option">
+          <input type="radio" name="q5" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">O(V²)</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q5" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">O(V + E)</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q5" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">O(E log V)</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q5" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">O(V log V)</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 6 ─── -->
+    <div class="question-block" id="qblock-6">
+      <div class="q-label">Question 6</div>
+      <div class="q-text">In Islamic economics, a DAG can be used to model which of the following?</div>
+      <div class="q-options" data-question="6">
+        <label class="q-option">
+          <input type="radio" name="q6" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Circular debt relationships between parties</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q6" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Supply chain dependency flows without loops</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q6" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Riba-based interest compounding cycles</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q6" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Bidirectional trade partnerships</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 7 ─── -->
+    <div class="question-block" id="qblock-7">
+      <div class="q-label">Question 7</div>
+      <div class="q-text">Which of the following statements about a DAG is FALSE?</div>
+      <div class="q-options" data-question="7">
+        <label class="q-option">
+          <input type="radio" name="q7" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A DAG can have multiple source nodes</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q7" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A DAG can have disconnected components</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q7" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A DAG always has exactly one sink node</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q7" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A DAG supports topological ordering</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 8 ─── -->
+    <div class="question-block" id="qblock-8">
+      <div class="q-label">Question 8</div>
+      <div class="q-text">Kahn's algorithm for topological sort uses which data structure as its primary worklist?</div>
+      <div class="q-options" data-question="8">
+        <label class="q-option">
+          <input type="radio" name="q8" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Stack</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q8" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Queue</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q8" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Priority Queue</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q8" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">Hash Map</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 9 ─── -->
+    <div class="question-block" id="qblock-9">
+      <div class="q-label">Question 9</div>
+      <div class="q-text">In a DAG representing a Murabaha transaction flow, what does an edge from node A to node B signify?</div>
+      <div class="q-options" data-question="9">
+        <label class="q-option">
+          <input type="radio" name="q9" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A and B are equal counterparties</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q9" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">B must be completed before A</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q9" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A must be completed before B can begin</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q9" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A and B can occur simultaneously</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+    <!-- ─── QUESTION 10 ─── -->
+    <div class="question-block" id="qblock-10">
+      <div class="q-label">Question 10</div>
+      <div class="q-text">A graph that has a directed cycle cannot be classified as a DAG. Which of the following graphs IS a valid DAG?</div>
+      <div class="q-options" data-question="10">
+        <label class="q-option">
+          <input type="radio" name="q10" value="a"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A → B → C → A (triangle loop)</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q10" value="b"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A → B, A → C, B → D, C → D (diamond shape)</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q10" value="c"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A ↔ B (bidirectional edge)</span>
+        </label>
+        <label class="q-option">
+          <input type="radio" name="q10" value="d"/>
+          <span class="q-radio"></span>
+          <span class="q-option-text">A → B → A (two-node cycle)</span>
+        </label>
+      </div>
+      <button class="q-ai-btn">✨ AI Explanation</button>
+    </div>
+
+  </div><!-- /.quiz-card -->
+</div><!-- /.quiz-body -->
+
+
+<!-- ═══ FIXED BOTTOM SUBMIT BAR ═══ -->
+<div class="quiz-bottom-bar">
+  <div class="quiz-bottom-stats">
+    <div class="bottom-stat">✅ Answered: <strong id="statAnswered">2</strong></div>
+    <div class="bottom-stat">⬜ Unanswered: <strong id="statUnanswered">8</strong></div>
+    <div class="bottom-stat">📊 <strong id="statPct">20%</strong> done</div>
+  </div>
+  <!-- PHP: action="submit_quiz.php" method="POST" -->
+  <a href="quiz-results.html" class="quiz-submit-btn">Submit Answers →</a>
+</div>
+
+
+<script src="assets/js/main.js"></script>
+<script>
+/* ─── QUIZ PAGE INTERACTIVITY ─── */
+(function () {
+
+  /* ── 1. COUNTDOWN TIMER ── */
+  var TOTAL_SECONDS = 15 * 60; /* PHP: echo $quiz->time_limit * 60 */
+  var remaining     = TOTAL_SECONDS;
+  var timerDisplay  = document.getElementById('timerDisplay');
+  var timerPill     = document.getElementById('quizTimer');
+
+  function formatTime(s) {
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  var timerInterval = setInterval(function () {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = '00:00';
+      /* PHP will handle auto-submit; JS can trigger form submit here */
+      return;
+    }
+    timerDisplay.textContent = formatTime(remaining);
+    /* Turn red when under 2 minutes */
+    if (remaining <= 120) {
+      timerPill.classList.add('warning');
+    }
+  }, 1000);
+
+  /* ── 2. OPTION SELECTION + PROGRESS TRACKING ── */
+  var TOTAL_QUESTIONS = 10; /* PHP: echo $total_questions */
+  var answered        = new Set();
+
+  /* Pre-fill already-answered questions (checked on load) */
+  document.querySelectorAll('.q-options input[type="radio"]:checked').forEach(function (r) {
+    var qNum = r.closest('.question-block').id.replace('qblock-', '');
+    answered.add(qNum);
+  });
+
+  function updateProgress() {
+    var count = answered.size;
+    var pct   = Math.round((count / TOTAL_QUESTIONS) * 100);
+
+    document.getElementById('progressBar').style.width  = pct + '%';
+    document.getElementById('progressPct').textContent  = pct + '%';
+    document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_QUESTIONS + ' answered';
+    document.getElementById('statAnswered').textContent   = count;
+    document.getElementById('statUnanswered').textContent = TOTAL_QUESTIONS - count;
+    document.getElementById('statPct').textContent        = pct + '%';
+  }
+
+  /* Initial update */
+  updateProgress();
+
+  /* Listen to all option clicks */
+  document.querySelectorAll('.q-options').forEach(function (group) {
+    group.querySelectorAll('.q-option').forEach(function (option) {
+      option.addEventListener('click', function () {
+        /* Visual: remove selected from siblings */
+        group.querySelectorAll('.q-option').forEach(function (o) {
+          o.classList.remove('selected');
+        });
+        option.classList.add('selected');
+
+        /* Check the hidden radio */
+        var radio = option.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+
+        /* Track answered */
+        var qNum = group.closest('.question-block').id.replace('qblock-', '');
+        answered.add(qNum);
+        updateProgress();
+      });
+    });
+  });
+
+  /* ── 3. AI EXPLANATION BUTTON ── */
+  /* Placeholder — PHP/AJAX will handle actual AI fetch */
+  document.querySelectorAll('.q-ai-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var block = btn.closest('.question-block');
+      /* PHP will render the explanation panel; this just shows a loading state */
+      btn.textContent = '⏳ Loading explanation…';
+      btn.style.opacity = '0.6';
+      btn.style.pointerEvents = 'none';
+      /* Reset after 2s (remove when PHP AJAX is wired up) */
+      setTimeout(function () {
+        btn.textContent = '✨ AI Explanation';
+        btn.style.opacity = '';
+        btn.style.pointerEvents = '';
+      }, 2000);
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

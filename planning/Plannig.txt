@@ -1,0 +1,16 @@
+Quiz and learning Website
+Students can participate in various quiz related to their isdb course. It will have course based on every topic on DAG. It will have leaderboard system, tracking system on which quiz was alreadey participate with scores. 
+
+
+
+they website will have ai integration with functionalities like
+- Students can generate their own quizes from the topic they like.
+- if they fails to understand any question they can see an explanation provided by the ai.
+- Ai will be able to add quizes directly to the database; 
+- Students can generate other questions of a particular type from a existing question.
+
+
+Steps:
+1. Find a template suitable for this website 
+2. Add quiz system
+3. Add registration login system
