@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Results – EduHub</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    body { background:linear-gradient(135deg,#f6f2ff 0%,#fffbec 100%); }
+    .results-hero { text-align:center; padding:52px 24px 36px; }
+    .confetti { font-size:2.8rem; margin-bottom:16px; animation:bounce .8s ease-in-out; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-18px)} 60%{transform:translateY(-8px)} }
+    .results-body { max-width:760px; margin:0 auto; padding:0 16px 80px; }
+    .score-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:28px 0; }
+    .score-box { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center; }
+    .score-box .val { font-family:var(--font-mono); font-size:1.5rem; font-weight:700; color:var(--navy); }
+    .score-box .lbl { font-size:.76rem; color:var(--slate); margin-top:3px; }
+    .xp-toast { background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:#fff; border-radius:var(--radius-lg); padding:18px 24px; display:flex; align-items:center; gap:14px; margin-bottom:24px; flex-wrap:wrap; }
+    .xp-toast h4 { color:#fff; font-size:.97rem; }
+    .xp-toast p  { color:rgba(255,255,255,.8); font-size:.83rem; margin-top:2px; }
+    /* Review questions */
+    .review-q { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-lg); padding:20px 22px; margin-bottom:14px; }
+    .q-status  { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-display); font-weight:700; font-size:.78rem; padding:3px 11px; border-radius:var(--radius-pill); margin-bottom:10px; }
+    .q-status.correct { background:var(--green-faint);  color:var(--green-dark); }
+    .q-status.wrong   { background:var(--coral-faint);  color:#b02020; }
+    .q-status.skipped { background:rgba(107,114,128,.1); color:var(--slate); }
+    .review-q .q-text { font-family:var(--font-display); font-weight:700; font-size:.93rem; color:var(--navy); margin-bottom:12px; line-height:1.45; }
+    .review-options { display:flex; flex-direction:column; gap:7px; }
+    .review-option { display:flex; align-items:center; gap:11px; padding:9px 14px; border-radius:var(--radius-md); border:1.5px solid var(--border); font-size:.86rem; border-color: #7f8c8d; background: #f9f9f9;}
+    .review-option.correct { border-color:var(--green); background:var(--green-faint); }
+    .review-option.wrong   { border-color:var(--coral); background:var(--coral-faint); }
+    .ro-letter { width:26px; height:26px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:.76rem; background:var(--border); color:var(--slate); }
+    .review-option.correct .ro-letter { background:var(--green); color:#fff; }
+    .review-option.wrong   .ro-letter { background:var(--coral); color:#fff; }
+    .ro-flag { margin-left:auto; font-size:.76rem; font-weight:700; white-space:nowrap; }
+    .ai-explain { margin-top:12px; background:linear-gradient(135deg,rgba(92,51,246,.05),rgba(92,51,246,.02)); border:1.5px solid rgba(92,51,246,.15); border-radius:var(--radius-md); padding:14px 16px; }
+    .ai-explain p { font-size:.86rem; color:var(--navy); line-height:1.6; margin-top:8px; }
+    /* Review filter tabs */
+    .review-tabs { display:flex; gap:3px; margin-bottom:18px; flex-wrap:wrap; }
+    .review-tab { padding:7px 16px; border-radius:var(--radius-pill); border:1.5px solid var(--border); background:var(--surface); font-family:var(--font-display); font-weight:700; font-size:.8rem; color:var(--slate); cursor:pointer; transition:all var(--transition); }
+    .review-tab:hover  { border-color:var(--primary); color:var(--primary); }
+    .review-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+    @media(max-width:560px) {
+      .score-grid { grid-template-columns:repeat(2,1fr); }
+      .xp-toast   { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+
+<div class="results-body">
+
+  <!-- XP Toast -->
+  <div class="xp-toast anim-fade-up delay-1">
+    <div style="font-size:1.9rem;flex-shrink:0">⭐</div>
+    <div style="flex:1">
+      <h4>+120 XP Earned!</h4>
+      <p>You've moved up to rank #11. Just 1 more win to reach #10!</p>
+    </div>
+    <a href="leaderboard.html" class="btn btn-yellow btn-sm" style="flex-shrink:0">View Rank →</a>
+  </div>
+
+  <!-- Score breakdown -->
+  <div class="score-grid anim-fade-up delay-1">
+    <div class="score-box"><div class="val text-green"><?= $right_answer_counter ?></div><div class="lbl">✅ Correct</div></div>
+    <div class="score-box"><div class="val text-coral"><?= $wrong_answer_counter ?></div><div class="lbl">❌ Wrong</div></div>
+    <div class="score-box"><div class="val" style="color:var(--slate)"><?= $not_answered_counter ?></div><div class="lbl">⏭ Skipped</div></div>
+    <div class="score-box"><div class="val" style="color:var(--yellow-dark)">7:26</div><div class="lbl">⏱ Time</div></div>
+  </div>
+
+  <!-- Action buttons -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px" class="anim-fade-up delay-2">
+    <a href="quiz.html" class="btn btn-primary">🔄 Retry Quiz</a>
+    <a href="ai-generator.html" class="btn btn-outline">✨ Generate Similar</a>
+    <a href="course-detail.html"class="btn btn-ghost">← Back to Course</a>
+  </div>
+
+  <!-- ----------------------------------------- -->
+  <!-- Question Review -->
+  <!-- <div class="anim-fade-up delay-2"> -->
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+      <h2 style="font-size:1.2rem">Question Review</h2>
+      <!-- JS-powered filter tabs -->
+      <div class="review-tabs" data-filter-group>
+        <button class="review-tab active filter-chip" data-filter="all">All (10)</button>
+        <button class="review-tab filter-chip" data-filter="correct">✅ Correct (8)</button>
+        <button class="review-tab filter-chip" data-filter="wrong">❌ Wrong (2)</button>
+      </div>
+    </div>
+
+    <!-- PHP: foreach ($questions as $i => $q) -->
+
+    <div class="review-q">
+      <div class="q-status wrong">❌ Incorrect</div>
+      <div class="q-text">Q2. Which sorting algorithm is most directly associated with processing a DAG in dependency order?</div>
+      <div class="review-options">
+        <div class="review-option wrong">
+          <div class="ro-letter">A</div>
+          <span>Bubble Sort</span>
+          <span class="ro-flag" style="color:var(--coral)">✗ Your answer</span>
+        </div>
+        <div class="review-option correct">
+          <div class="ro-letter">C</div>
+          <span>Topological Sort</span>
+          <span class="ro-flag" style="color:var(--green-dark)">✓ Correct</span>
+        </div>
+      </div>
+      <div class="ai-explain">
+        <div class="ai-label"><span class="ai-dot"></span> AI Explanation</div>
+        <p><strong>Topological Sort</strong> is designed specifically for DAGs. It produces a linear ordering of nodes such that for every directed edge from <em>u → v</em>, node <em>u</em> comes before <em>v</em>. This is essential in dependency resolution — task scheduling, build systems, and course prerequisites. Bubble Sort is a general-purpose comparison sort with no awareness of graph structure.</p>
+        <a href="ai-generator.html" class="btn btn-sm btn-outline" style="margin-top:10px">Generate more like this ✨</a>
+      </div>
+    </div>
+
+    <div class="review-q">
+      <div class="q-status correct">✅ Correct</div>
+      <div class="q-text">Q3. In a DAG, a node with no incoming edges is called a ___.</div>
+      <div class="review-options">
+        <div class="review-option correct">
+          <div class="ro-letter">D</div>
+          <span>Source node</span>
+          <span class="ro-flag" style="color:var(--green-dark)">✓ Your answer</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-q">
+      <div class="q-status wrong">❌ Incorrect</div>
+      <div class="q-text">Q4. In a Directed Acyclic Graph, which property is always true?</div>
+      <div class="review-options">
+        <div class="review-option wrong">
+          <div class="ro-letter">D</div>
+          <span>The graph must always be fully connected</span>
+          <span class="ro-flag" style="color:var(--coral)">✗ Your answer</span>
+        </div>
+        <div class="review-option correct">
+          <div class="ro-letter">B</div>
+          <span>There are no cycles — you cannot revisit a node</span>
+          <span class="ro-flag" style="color:var(--green-dark)">✓ Correct</span>
+        </div>
+      </div>
+      <div class="ai-explain">
+        <div class="ai-label"><span class="ai-dot"></span> AI Explanation</div>
+        <p>A DAG does <strong>not</strong> need to be fully connected. It is perfectly valid for a DAG to have disconnected components. The only mandatory property is that it is <em>directed</em> (edges have a direction) and <em>acyclic</em> (following edges never leads back to a previously visited node). Connectivity is a separate graph property entirely.</p>
+        <a href="ai-generator.html" class="btn btn-sm btn-outline" style="margin-top:10px">Generate more like this ✨</a>
+      </div>
+    </div>
+
+    <!-- Remaining correct questions collapsed for brevity -->
+    <div class="review-q">
+      <div class="q-status correct">✅ Correct</div>
+      <div class="q-text">Q5. What is the time complexity of Topological Sort using DFS?</div>
+      <div class="review-options"><div class="review-option correct"><div class="ro-letter">B</div><span>O(V + E) — linear in vertices and edges</span><span class="ro-flag" style="color:var(--green-dark)">✓ Your answer</span></div></div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="card" style="text-align:center;margin-top:28px;background:linear-gradient(135deg,rgba(92,51,246,.04),rgba(255,217,74,.06))">
+    <div style="font-size:2rem;margin-bottom:8px">🚀</div>
+    <h3>Ready for Module 4?</h3>
+    <p style="margin-top:5px;margin-bottom:18px">Continue with DAG Fundamentals – Module 4: Topological Sorting Algorithms.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a href="quiz.html"       class="btn btn-primary">Start Module 4 →</a>
+      <a href="dashboard.html"  class="btn btn-outline">Back to Dashboard</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

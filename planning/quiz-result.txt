@@ -1,0 +1,7 @@
+1. receive answers from quiz.php. if it does not exist check database if user has already attempted this exam and show get previus user answers from database;
+
+2. get questions with the correct answers from database. check how many question the user got right, wrong or not answered.(done)
+
+3. display the question with options again and mark which one the user got right wrong or not answered (done)
+
+4. save user answers, score to database.

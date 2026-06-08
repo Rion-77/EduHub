@@ -11,6 +11,6 @@ they website will have ai integration with functionalities like
 
 
 Steps:
-1. Find a template suitable for this website 
+1. Find a template suitable for this website (done)
 2. Add quiz system
 3. Add registration login system

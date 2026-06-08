@@ -143,6 +143,93 @@
     });
   });
 
+  /* custom added */
+
+  // Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  const filterContainer = document.querySelector('[data-filter-group]');
+  if (!filterContainer) return;
+
+  const tabs = filterContainer.querySelectorAll('.review-tab');
+  const reviewItems = document.querySelectorAll('.review-q');
+
+  // Helper: get status from the .q-status element inside each review-q
+  function getQuestionStatus(reviewQ) {
+    const statusDiv = reviewQ.querySelector('.q-status');
+    if (!statusDiv) return 'unknown';
+
+    const text = statusDiv.innerText.trim();
+    if (text.includes('✅ Correct')) return 'correct';
+    if (text.includes('❌ Incorrect')) return 'wrong';
+    if (text.includes('🙄 Not answered')) return 'not_answered';
+    return 'wrong'; // fallback
+  }
+
+  // Update tab counts based on current DOM
+  function updateTabCounts() {
+    let allCount = reviewItems.length;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let notAnsweredCount = 0;
+
+    reviewItems.forEach(item => {
+      const status = getQuestionStatus(item);
+      if (status === 'correct') correctCount++;
+      else if (status === 'wrong') wrongCount++;
+      else if (status === 'not_answered') notAnsweredCount++;
+    });
+
+    // Update tab labels (preserve icons and formatting)
+    tabs.forEach(tab => {
+      const filter = tab.getAttribute('data-filter');
+      if (filter === 'all') {
+        tab.innerHTML = `All (${allCount})`;
+      } else if (filter === 'correct') {
+        tab.innerHTML = `✅ Correct (${correctCount})`;
+      } else if (filter === 'wrong') {
+        // Combine "wrong" + "not answered" under the ❌ Wrong tab
+        tab.innerHTML = `❌ Wrong (${wrongCount + notAnsweredCount})`;
+      }
+    });
+  }
+
+  // Filter questions based on selected tab
+  function filterQuestions(filter) {
+    reviewItems.forEach(item => {
+      const status = getQuestionStatus(item);
+      let show = false;
+
+      if (filter === 'all') {
+        show = true;
+      } else if (filter === 'correct') {
+        show = (status === 'correct');
+      } else if (filter === 'wrong') {
+        show = (status === 'wrong' || status === 'not_answered');
+      }
+
+      item.style.display = show ? '' : 'none';
+    });
+  }
+
+  // Add click handlers to tabs
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      // Add active class to the clicked tab
+      this.classList.add('active');
+
+      const filter = this.getAttribute('data-filter');
+      filterQuestions(filter);
+    });
+  });
+
+  // Initialize: update counts and show all questions
+  updateTabCounts();
+  filterQuestions('all');
+});
+
   /* ─── 5. TOGGLE SWITCHES ────────────────────────── */
   document.querySelectorAll('.toggle').forEach(function (toggle) {
     toggle.addEventListener('click', function () {

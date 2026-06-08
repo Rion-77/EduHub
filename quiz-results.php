@@ -1,3 +1,101 @@
+<?php 
+require_once 'config/database-connect.php';
+
+
+///////////////////////////////////
+// Quiz Details
+$quiz_id = 1;
+$details_query = "SELECT quiz_name,description,time_limit FROM quizzes WHERE id= $quiz_id
+";
+
+
+$details_result = $db->query($details_query);
+$quiz_details = $details_result->fetch_assoc();
+
+// echo "<pre>";
+// print_r($quiz_details);
+// echo "</pre>";
+
+
+////////////////////////////////////
+// Questions with correct option
+
+
+$query = "SELECT q.id, question, qt.name as question_type, qo.id as correct_option_id 
+FROM questions AS q
+JOIN question_types AS qt ON q.question_type_id = qt.id
+JOIN question_options AS qo ON qo.question_id = q.id AND qo.is_correct = 1
+WHERE q.quiz_id = 1
+GROUP BY q.id";
+// $query = "SELECT 
+// q.id, 
+// question, 
+// qt.name as question_type, 
+// qo.id as correct_option_id 
+// FROM 
+// questions AS q, 
+// question_types AS qt, 
+// question_options AS qo 
+// WHERE quiz_id = $quiz_id 
+// AND question_type_id = qt.id
+// AND qo.question_id = q.id 
+// AND qo.is_correct = 1";
+
+$result = $db->query($query);
+
+$questions = $result->fetch_all(MYSQLI_ASSOC);
+
+$question_count = count($questions);
+
+echo "<pre>";
+print_r($questions);
+echo "</pre>";
+
+///////////////////////////////////////
+// User Answers
+$user_answers = null;
+if(isset($_POST['submit'])) {
+$user_answers =   $_POST;
+// echo "<pre>";
+// print_r($user_answers);
+// echo "</pre>";
+}
+
+
+/////////////////////////////////
+// Counters 
+$question_counter = 0;
+$total_question = count($questions);
+$right_answer_counter = 0;
+$wrong_answer_counter = 0;
+$not_answered_counter = 0;
+
+
+////////////////////////////////////////
+// looping through question to update question array and counters
+foreach ($questions as &$question) {
+  if( !isset($user_answers[$question['id']])) {
+     $not_answered_counter++;
+     $question['status'] = "not_answered";
+  } elseif($user_answers[$question['id']] == $question['correct_option_id']) {
+    $right_answer_counter++;
+    $question['status'] = "correct";
+    $question['user_answer'] = $user_answers[$question['id']];
+  } elseif($user_answers[$question['id']] != $question['correct_option_id']) {
+    $wrong_answer_counter++;
+    $question['status'] = "wrong";
+    $question['user_answer'] = $user_answers[$question['id']];
+  }
+}
+
+$right_percentage = $right_answer_counter/$total_question*100;
+
+
+// echo "<pre>";
+// print_r($questions);
+// echo "</pre>";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +124,7 @@
     .q-status.skipped { background:rgba(107,114,128,.1); color:var(--slate); }
     .review-q .q-text { font-family:var(--font-display); font-weight:700; font-size:.93rem; color:var(--navy); margin-bottom:12px; line-height:1.45; }
     .review-options { display:flex; flex-direction:column; gap:7px; }
-    .review-option { display:flex; align-items:center; gap:11px; padding:9px 14px; border-radius:var(--radius-md); border:1.5px solid var(--border); font-size:.86rem; }
+    .review-option { display:flex; align-items:center; gap:11px; padding:9px 14px; border-radius:var(--radius-md); border:1.5px solid var(--border); font-size:.86rem; border-color: #7f8c8d; background: #f9f9f9;}
     .review-option.correct { border-color:var(--green); background:var(--green-faint); }
     .review-option.wrong   { border-color:var(--coral); background:var(--coral-faint); }
     .ro-letter { width:26px; height:26px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:.76rem; background:var(--border); color:var(--slate); }
@@ -79,40 +177,45 @@
 <div class="results-hero anim-fade-up">
   <div class="confetti">🎉</div>
   <div class="section-label">Quiz Complete</div>
-  <h1 style="margin-top:10px">Great effort, Abdullah!</h1>
-  <p style="max-width:400px;margin:9px auto 24px">You completed <strong>DAG Fundamentals – Module 3</strong>.</p>
-  <div class="score-circle high"><div class="score-pct">80%</div><div class="score-text">8 / 10 correct</div></div>
+  <!-- <h1 style="margin-top:10px">Great effort, Abdullah!</h1> -->
+  <!-- <p style="max-width:400px;margin:9px auto 24px">You completed <strong><?= $quiz_details["quiz_name"] ?></strong>.</p> -->
+  <h2 style="margin:9px auto 24px">You completed <strong><?= $quiz_details["quiz_name"] ?></strong>.</h2>
+  <div class="score-circle high"><div class="score-pct"><?= $right_percentage ?>%</div><div class="score-text"><?= $right_answer_counter ?> / <?= $total_question ?> correct</div></div>
 </div>
 
 <div class="results-body">
 
+ <!---------------------------------  -->
   <!-- XP Toast -->
-  <div class="xp-toast anim-fade-up delay-1">
+
+  <!-- <div class="xp-toast anim-fade-up delay-1">
     <div style="font-size:1.9rem;flex-shrink:0">⭐</div>
     <div style="flex:1">
       <h4>+120 XP Earned!</h4>
       <p>You've moved up to rank #11. Just 1 more win to reach #10!</p>
     </div>
     <a href="leaderboard.html" class="btn btn-yellow btn-sm" style="flex-shrink:0">View Rank →</a>
-  </div>
+  </div> -->
 
   <!-- Score breakdown -->
   <div class="score-grid anim-fade-up delay-1">
-    <div class="score-box"><div class="val text-green">8</div><div class="lbl">✅ Correct</div></div>
-    <div class="score-box"><div class="val text-coral">2</div><div class="lbl">❌ Wrong</div></div>
-    <div class="score-box"><div class="val" style="color:var(--slate)">0</div><div class="lbl">⏭ Skipped</div></div>
+    <div class="score-box"><div class="val text-green"><?= $right_answer_counter ?></div><div class="lbl">✅ Correct</div></div>
+    <div class="score-box"><div class="val text-coral"><?= $wrong_answer_counter ?></div><div class="lbl">❌ Wrong</div></div>
+    <div class="score-box"><div class="val" style="color:var(--slate)"><?= $not_answered_counter ?></div><div class="lbl">⏭ Skipped</div></div>
     <div class="score-box"><div class="val" style="color:var(--yellow-dark)">7:26</div><div class="lbl">⏱ Time</div></div>
   </div>
 
   <!-- Action buttons -->
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px" class="anim-fade-up delay-2">
-    <a href="quiz.html"         class="btn btn-primary">🔄 Retry Quiz</a>
+    <a href="quiz.html" class="btn btn-primary">🔄 Retry Quiz</a>
     <a href="ai-generator.html" class="btn btn-outline">✨ Generate Similar</a>
     <a href="course-detail.html"class="btn btn-ghost">← Back to Course</a>
   </div>
 
+  <!-- ----------------------------------------- -->
   <!-- Question Review -->
-  <div class="anim-fade-up delay-2">
+  <!-- <div class="anim-fade-up delay-2"> -->
+  <div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
       <h2 style="font-size:1.2rem">Question Review</h2>
       <!-- JS-powered filter tabs -->
@@ -125,92 +228,68 @@
 
     <!-- PHP: foreach ($questions as $i => $q) -->
 
+    <?php foreach ($questions as $question) { 
+      $option_query = "SELECT id, option_text, is_correct FROM question_options WHERE question_id = {$question['id']};";
+
+            $option_result = $db->query($option_query);
+
+            $options = $option_result->fetch_all(MYSQLI_ASSOC);
+
+        //  echo "<pre>";
+        //  print_r($options);
+        //  echo "</pre>";
+      
+        //  var_dump($_POST[$question["id"]]);
+      ?>
+
     <div class="review-q">
-      <div class="q-status correct">✅ Correct</div>
-      <div class="q-text">Q1. What does "Acyclic" mean in the context of a DAG?</div>
+      <!-- Status -->
+       <?php 
+       if($question['status'] === 'correct') {
+        echo "<div class='q-status correct'>✅ Correct</div>";
+       } elseif($question['status'] === 'wrong') {
+        echo "<div class='q-status wrong'>❌ Incorrect</div>";   
+       } elseif($question['status'] === 'not_answered') {
+        echo "<div class='q-status wrong'>🙄 Not answered</div>"; 
+       }
+       ?>
+      <!-- Title -->
+      <div class="q-text"><?= htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8') ?></div>
       <div class="review-options">
-        <div class="review-option correct">
-          <div class="ro-letter">B</div>
-          <span>The graph contains no directed cycles — you cannot return to a starting node</span>
-          <span class="ro-flag" style="color:var(--green-dark)">✓ Your answer</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="review-q">
-      <div class="q-status wrong">❌ Incorrect</div>
-      <div class="q-text">Q2. Which sorting algorithm is most directly associated with processing a DAG in dependency order?</div>
-      <div class="review-options">
-        <div class="review-option wrong">
-          <div class="ro-letter">A</div>
-          <span>Bubble Sort</span>
-          <span class="ro-flag" style="color:var(--coral)">✗ Your answer</span>
-        </div>
-        <div class="review-option correct">
-          <div class="ro-letter">C</div>
-          <span>Topological Sort</span>
-          <span class="ro-flag" style="color:var(--green-dark)">✓ Correct</span>
-        </div>
-      </div>
-      <div class="ai-explain">
-        <div class="ai-label"><span class="ai-dot"></span> AI Explanation</div>
-        <p><strong>Topological Sort</strong> is designed specifically for DAGs. It produces a linear ordering of nodes such that for every directed edge from <em>u → v</em>, node <em>u</em> comes before <em>v</em>. This is essential in dependency resolution — task scheduling, build systems, and course prerequisites. Bubble Sort is a general-purpose comparison sort with no awareness of graph structure.</p>
-        <a href="ai-generator.html" class="btn btn-sm btn-outline" style="margin-top:10px">Generate more like this ✨</a>
-      </div>
-    </div>
+      <?php
 
-    <div class="review-q">
-      <div class="q-status correct">✅ Correct</div>
-      <div class="q-text">Q3. In a DAG, a node with no incoming edges is called a ___.</div>
-      <div class="review-options">
-        <div class="review-option correct">
-          <div class="ro-letter">D</div>
-          <span>Source node</span>
-          <span class="ro-flag" style="color:var(--green-dark)">✓ Your answer</span>
+            foreach ($options as $option) {
+            ?>
+
+        <div class="review-option <?php 
+        if ($option["id"] === $question['correct_option_id']) {
+          echo "correct";
+        } elseif($question['status'] === 'wrong' && $option["id"] === $question['user_answer']) {
+          echo "wrong";
+        }
+        ?>">
+          <!-- <div class="ro-letter">B</div> -->
+          <span><?= htmlspecialchars($option['option_text'], ENT_QUOTES, 'UTF-8') ?></span>
+        <?php 
+
+        if ($question['status'] === 'correct' && $option["id"] === $question['correct_option_id']) {
+         echo "<span class='ro-flag' style='color:var(--green-dark)'>✓ Your answer</span>";
+        }
+         elseif ($option["id"] === $question['correct_option_id']) {
+         echo "<span class='ro-flag' style='color:var(--green-dark)'>✓ Correct</span>";
+        } elseif($question['status'] === 'wrong' && $option["id"] === $question['user_answer']) {
+          echo "<span class='ro-flag' style='color:var(--coral)'>✗ Your answer</span>";
+        }
+        ?>
+          
         </div>
+
+        <?php } ?>
+
       </div>
     </div>
-
-    <div class="review-q">
-      <div class="q-status wrong">❌ Incorrect</div>
-      <div class="q-text">Q4. In a Directed Acyclic Graph, which property is always true?</div>
-      <div class="review-options">
-        <div class="review-option wrong">
-          <div class="ro-letter">D</div>
-          <span>The graph must always be fully connected</span>
-          <span class="ro-flag" style="color:var(--coral)">✗ Your answer</span>
-        </div>
-        <div class="review-option correct">
-          <div class="ro-letter">B</div>
-          <span>There are no cycles — you cannot revisit a node</span>
-          <span class="ro-flag" style="color:var(--green-dark)">✓ Correct</span>
-        </div>
-      </div>
-      <div class="ai-explain">
-        <div class="ai-label"><span class="ai-dot"></span> AI Explanation</div>
-        <p>A DAG does <strong>not</strong> need to be fully connected. It is perfectly valid for a DAG to have disconnected components. The only mandatory property is that it is <em>directed</em> (edges have a direction) and <em>acyclic</em> (following edges never leads back to a previously visited node). Connectivity is a separate graph property entirely.</p>
-        <a href="ai-generator.html" class="btn btn-sm btn-outline" style="margin-top:10px">Generate more like this ✨</a>
-      </div>
-    </div>
-
-    <!-- Remaining correct questions collapsed for brevity -->
-    <div class="review-q">
-      <div class="q-status correct">✅ Correct</div>
-      <div class="q-text">Q5. What is the time complexity of Topological Sort using DFS?</div>
-      <div class="review-options"><div class="review-option correct"><div class="ro-letter">B</div><span>O(V + E) — linear in vertices and edges</span><span class="ro-flag" style="color:var(--green-dark)">✓ Your answer</span></div></div>
-    </div>
-  </div>
-
-  <!-- Bottom CTA -->
-  <div class="card" style="text-align:center;margin-top:28px;background:linear-gradient(135deg,rgba(92,51,246,.04),rgba(255,217,74,.06))">
-    <div style="font-size:2rem;margin-bottom:8px">🚀</div>
-    <h3>Ready for Module 4?</h3>
-    <p style="margin-top:5px;margin-bottom:18px">Continue with DAG Fundamentals – Module 4: Topological Sorting Algorithms.</p>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-      <a href="quiz.html"       class="btn btn-primary">Start Module 4 →</a>
-      <a href="dashboard.html"  class="btn btn-outline">Back to Dashboard</a>
-    </div>
-  </div>
+    <?php } ?>
 
 </div>
 
