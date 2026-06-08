@@ -1,9 +1,49 @@
+<?php 
+require_once 'config/database-connect.php';
+
+
+/* 
+1. get all categorie id from link
+2. display categori data on the page
+3. get all quiz of that category
+*/
+
+// Redirect to course page if no category id is found
+if(!isset($_GET['category_id'])){
+  header("location: courses.php");
+}
+
+// Category details
+$sql = "SELECT id,name,description FROM `quiz_category` WHERE id={$_GET['category_id']}";
+
+$result = $db->query($sql);
+$details = $result->fetch_assoc();
+// echo "<pre>";
+// print_r($details);
+// echo "</pre>";
+
+// quizzes details
+
+$quiz_result = $db->query("SELECT * FROM `quizzes` WHERE quiz_category_id={$_GET['category_id']}");
+$quizzes = $quiz_result->fetch_all(MYSQLI_ASSOC);
+echo "<pre>";
+print_r($quizzes);
+echo "</pre>";
+
+
+
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DAG Fundamentals – EduHub</title>
+  <title><?= $details["name"] ?></title>
   <link rel="stylesheet" href="assets/css/style.css"/>
   <style>
     .course-hero { background:linear-gradient(135deg,rgba(92,51,246,.07),rgba(92,51,246,.02)); border-bottom:1.5px solid var(--border); padding:48px 0 36px; }
@@ -70,7 +110,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--slate)">
       <a href="courses.html" style="color:var(--primary);font-weight:700">Courses</a>
-      <span>›</span><span>DAG Fundamentals</span>
+      <span>›</span><span><?= $details["name"] ?></span>
     </div>
   </div>
 </div>
@@ -80,29 +120,30 @@
   <div class="container">
     <div class="course-hero-grid">
       <div>
-        <div style="display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap">
-          <span class="badge badge-primary">Core</span>
-          <span class="badge badge-green">Enrolled</span>
-          <span class="badge badge-yellow">🔥 Popular</span>
-        </div>
-        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem)">📊 DAG Fundamentals</h1>
-        <p style="max-width:540px;margin-top:10px;font-size:.97rem">The foundational course covering Directed Acyclic Graphs and their applications in Islamic economics, data modelling, and dependency resolution.</p>
+        
+        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem)"><?= $details["name"] ?></h1>
+        <p style="max-width:540px;margin-top:10px;font-size:.97rem"><?= $details["description"] ?></p>
         <div style="display:flex;gap:20px;flex-wrap:wrap;margin:18px 0">
           <span style="display:flex;align-items:center;gap:5px;font-size:.85rem;color:var(--slate)">📝 <strong style="color:var(--navy)">8 modules</strong></span>
           <span style="display:flex;align-items:center;gap:5px;font-size:.85rem;color:var(--slate)">❓ <strong style="color:var(--navy)">80 questions</strong></span>
           <span style="display:flex;align-items:center;gap:5px;font-size:.85rem;color:var(--slate)">⏱ <strong style="color:var(--navy)">6h est.</strong></span>
           <span style="display:flex;align-items:center;gap:5px;font-size:.85rem;color:var(--slate)">⭐ <strong style="color:var(--navy)">4.8</strong> (340 ratings)</span>
         </div>
-        <div>
+
+        <!-- Progress Bar -->
+
+        <!-- <div>
           <div style="display:flex;justify-content:space-between;margin-bottom:6px">
             <span style="font-family:var(--font-display);font-weight:700;font-size:.84rem">Your Progress</span>
             <span style="font-family:var(--font-mono);font-size:.84rem;color:var(--primary)">62% · 5 of 8 modules</span>
           </div>
           <div class="progress-bar" style="height:12px"><div class="progress-fill" style="width:62%"></div></div>
-        </div>
+        </div> -->
       </div>
 
-      <div class="sticky-card">
+      <!-- Sticky card -->
+
+      <!-- <div class="sticky-card">
         <div style="font-size:3rem;margin-bottom:12px">📊</div>
         <div style="font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:var(--primary)">62%</div>
         <div style="color:var(--slate);font-size:.8rem;margin-bottom:18px">Complete · 5 of 8 modules</div>
@@ -116,7 +157,8 @@
         <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
           <a href="ai-generator.html" class="ai-label" style="width:100%;justify-content:center"><span class="ai-dot"></span> Generate AI Quiz</a>
         </div>
-      </div>
+      </div> -->
+
     </div>
   </div>
 </div>
@@ -129,14 +171,18 @@
         <!-- Tabs — JS powered -->
         <div class="tabs" data-tabs>
           <span class="tab-link active" data-tab="modules">📋 Modules</span>
-          <span class="tab-link" data-tab="about">ℹ️ About</span>
+          <!-- <span class="tab-link" data-tab="about">ℹ️ About</span> -->
           <span class="tab-link" data-tab="stats">📊 My Stats</span>
         </div>
 
         <!-- Modules Tab -->
         <div class="tab-panel active" data-tab-panel="modules">
-          <!-- Accordion — PHP: foreach ($modules as $m) -->
-          <div data-accordion>
+           <div class="module-quizzes open">
+            <?php foreach ($quizzes as $quiz) : ?>
+              <a href="quiz.php?quiz-id=<?= $quiz['id'] ?>" class="quiz-item"><span>📝</span> <?= $quiz['quiz_name'] ?><span class="qi-score"><?= $quiz['score'] ?></span></a>
+            <?php endforeach ?>
+            </div>
+          <!-- <div data-accordion>
 
             <div class="module-item">
               <div class="module-header open" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
@@ -215,11 +261,12 @@
               </div>
             </div>
 
-          </div>
+          </div> -->
         </div>
 
         <!-- About Tab -->
-        <div class="tab-panel" data-tab-panel="about">
+
+        <!-- <div class="tab-panel" data-tab-panel="about">
           <div class="card" style="margin-bottom:16px">
             <h4 style="margin-bottom:10px">🎯 What You'll Learn</h4>
             <div class="checklist-item">Core concepts of Directed Acyclic Graphs</div>
@@ -232,7 +279,7 @@
             <h4 style="margin-bottom:8px">📋 Requirements</h4>
             <p style="font-size:.86rem">No prior graph theory knowledge needed. Basic mathematics understanding recommended.</p>
           </div>
-        </div>
+        </div> -->
 
         <!-- Stats Tab -->
         <div class="tab-panel" data-tab-panel="stats">
@@ -249,7 +296,7 @@
       </div>
 
       <!-- Right sidebar -->
-      <div style="display:flex;flex-direction:column;gap:16px">
+      <!-- <div style="display:flex;flex-direction:column;gap:16px">
         <div class="card" style="padding:18px">
           <h4 style="margin-bottom:10px">🎯 What You'll Learn</h4>
           <div class="checklist-item">Core DAG concepts &amp; properties</div>
@@ -262,7 +309,7 @@
           <p style="font-size:.84rem;color:var(--navy);line-height:1.6">You're 38% away from completing. Focus on Module 3 Quiz 3.2 today — AI suggests reviewing cycle detection before attempting it.</p>
           <a href="ai-generator.html" class="btn btn-sm btn-outline" style="margin-top:12px">Generate Practice Quiz ✨</a>
         </div>
-      </div>
+      </div> -->
 
     </div>
   </div>

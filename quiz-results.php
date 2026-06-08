@@ -1,10 +1,13 @@
 <?php 
 require_once 'config/database-connect.php';
 
+if(!isset($_POST['quiz-id'])){
+  header("location: courses.php");
+}
 
 ///////////////////////////////////
 // Quiz Details
-$quiz_id = 1;
+$quiz_id = $_POST['quiz-id'];
 $details_query = "SELECT quiz_name,description,time_limit FROM quizzes WHERE id= $quiz_id
 ";
 
@@ -25,7 +28,7 @@ $query = "SELECT q.id, question, qt.name as question_type, qo.id as correct_opti
 FROM questions AS q
 JOIN question_types AS qt ON q.question_type_id = qt.id
 JOIN question_options AS qo ON qo.question_id = q.id AND qo.is_correct = 1
-WHERE q.quiz_id = 1
+WHERE q.quiz_id = $quiz_id
 GROUP BY q.id";
 // $query = "SELECT 
 // q.id, 
@@ -47,9 +50,9 @@ $questions = $result->fetch_all(MYSQLI_ASSOC);
 
 $question_count = count($questions);
 
-echo "<pre>";
-print_r($questions);
-echo "</pre>";
+// echo "<pre>";
+// print_r($questions);
+// echo "</pre>";
 
 ///////////////////////////////////////
 // User Answers

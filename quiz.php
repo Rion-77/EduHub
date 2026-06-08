@@ -1,7 +1,11 @@
 <?php
 require_once 'config/database-connect.php';
 
-$quiz_id = 1;
+if(!isset($_GET['quiz-id'])){
+  header("location: courses.php");
+}
+
+$quiz_id = $_GET['quiz-id'];
 
 // Quiz Details
 $details_query = "SELECT quiz_name,description,time_limit FROM quizzes WHERE id= $quiz_id
@@ -125,6 +129,7 @@ $question_counter = 0;
 
   <!-- ═══ QUIZ BODY ═══ -->
   <form action="quiz-results.php" method="POST"> 
+    <input type="hidden" name="quiz-id" value="<?= $_GET['quiz-id'] ?>">
   <div class="quiz-body">
     <!-- PHP: foreach ($questions as $i => $q) -->
     <div class="quiz-card">
