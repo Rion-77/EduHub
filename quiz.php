@@ -148,7 +148,7 @@ $question_counter = 0;
       <?php foreach ($questions as $question): ?>
         <div class="question-block" id="qblock-<?= ++$question_counter ?>">
           <div class="q-label">Question <?= $question_counter ?></div>
-          <div class="q-text"><?= $question['question'] ?></div>
+          <div class="q-text"><?= htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8') ?></div>
           <div class="q-options" data-question="<?= $question_counter ?>">
 
             <?php

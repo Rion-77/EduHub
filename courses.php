@@ -6,14 +6,16 @@ require_once 'config/database-connect.php';
 2. display categoris on the page
 */
 
+// Gets all categories from database
 $sql = "SELECT id,name,description FROM `quiz_category` WHERE parent_id = 0
 ";
 
 $result = $db->query($sql);
 $rows = $result->fetch_all(MYSQLI_ASSOC);
-echo "<pre>";
-print_r($rows);
-echo "</pre>";
+
+// echo "<pre>";
+// print_r($rows);
+// echo "</pre>";
 
 
 
