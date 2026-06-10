@@ -327,21 +327,61 @@ import { GoogleGenAI } from "https://esm.sh/@google/genai";
 
   /* ───  Ai explanation in quiz result page ───────────────────────────────────── */
 
-  //ai-output
-  //ai-explain-btn
-  //questions-review
-  //review-q
-  //q-text
-  //review-options
+  // ai-output
+  // ai-explain-btn
+  // questions-review
+  // review-q
+  // q-text
+  // review-options
 
-  // const aiExplainBtn = document.querySelector(".ai-explain-btn");
-  // const aiOutput = document.querySelector(".ai-output");
-  // console.log(aiExplainBtn);
-  // console.log(aiOutput);
+  const aiExplainBtn = document.querySelector(".ai-explain-btn");
+  const aiOutput = document.querySelector(".ai-output");
+  console.log(aiExplainBtn);
+  console.log(aiOutput);
 
   // api key
 
-  /* const geminiAi = new GoogleGenAI({ apiKey: "" });
+  // const geminiAi = new GoogleGenAI({ apiKey: "API KEY HERE" });
+
+  const googleApiErrors = {
+    400: {
+      name: "BAD_REQUEST",
+      message: "The request has an error, often due to a missing required parameter or invalid value.",
+      fix: "Check the fields, verify the JSON structure, and ensure all required parameters are supplied.",
+    },
+    401: {
+      name: "UNAUTHORIZED",
+      message: "The request doesn't contain a valid access token.",
+      fix: "Refresh the OAuth access token or ensure you are using a valid, unexpired API key.",
+    },
+    403: {
+      name: "FORBIDDEN",
+      message: "The developer account or project is not authorized to call this API, or the scope is missing.",
+      fix: "Enable the API in the Google Cloud Console and verify your account permission scopes.",
+    },
+    404: {
+      name: "NOT_FOUND",
+      message: "The specified resource could not be found.",
+      fix: "Verify the resource ID, URL pathway, or check if the resource has been deleted.",
+    },
+    429: {
+      name: "RESOURCE_EXHAUSTED",
+      message: "Current qutota rate limi. of the usage of ai has been  exceeded",
+      fix: "Implement exponential backoff retry logic, check your billing details, or request a quota increase.",
+    },
+    500: {
+      name: "INTERNAL_SERVER_ERROR",
+      message: "An unexpected error arose while processing the request on Google's servers.",
+      fix: "Wait briefly and retry the request. This is an internal issue on Google's side.",
+    },
+    503: {
+      name: "SERVICE_UNAVAILABLE",
+      message: "The server or model is overloaded and temporarily unable to handle the request.",
+      fix: "Implement a delay and retry after a short period when traffic subsides.",
+    },
+  };
+
+  console.log(googleApiErrors[400]);
 
   document.getElementById("questions-review").addEventListener("click", function (e) {
     //Select AI exlplanation button
@@ -376,60 +416,72 @@ import { GoogleGenAI } from "https://esm.sh/@google/genai";
         aiOutput.innerText = "Thinking...";
 
         const response = await geminiAi.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: ` a quiz and its status, question, correct option and maybe wrong option. it will have one of these three status (correct, incorrect, not answered). 
+          model: "gemini-2.5-flash-lite",
+          contents: `a quiz and its status, question, correct option and maybe wrong option. it will have one of these three status (correct, incorrect, not answered). 
 
-          based on status explain why the answer is right or wrong.
+          based on status explain why the answer is right or wrong in bangla language.
+
+          if status is 'correct' it means the answer is correct. give a brief explanation why the answer is correct
+
+          if status is 'wrong' it means the answer is wrong.
+          give a brief explanation why the answer is wrong comparing with the correct option
+
+          if status is 'not answered' it means the question was skipped.
+
+          if status is 'not answered' it means the question was skipped.  give a brief explanation why the Right Option is correct.
           
-          return explanation only. do not return anything else.
+          display html entities converted to symbols
+          avoid unecessary details
           
           Status:${qStatus}
-          Question: ${qStatus}
+          Question: ${qText}
           Right Option: ${qRightOptions}
-          ${qWrongOptions ? "Wrong Option:" + qWrongOptions : ""}
+          ${qWrongOptions ? "Wrong Option:" + qWrongOptions.innerHTML : ""}
 
           `,
         });
 
         aiOutput.innerText = response.text;
       } catch (error) {
-        console.error("Gemini Error:", error);
+        const code = JSON.parse(error.message).error.code;
+        console.log(code);
+        aiOutput.innerText = `${googleApiErrors[code]['message']}`;
       }
     }
 
     askGemini();
-  }); */
+  });
 
   /* 
-  A Html container will be given with a quiz and its option. check 'q-status' class, it will have one of these three status (correct, incorrect, not answered). 
-          
-          if status is 'correct' it means the answer is correct. give a brief explanation why the answer is correct comparing with the other options
+  
+  Gemini Error: ApiError: {"error":{"code":429,"message":"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash-lite\nPlease retry in 4.697527827s.","status":"RESOURCE_EXHAUSTED","details":[{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-2.5-flash-lite"},"quotaValue":"20"}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"4s"}]}}
+    at Ii (_api_client.ts:983:24)
+    at async _api_client.ts:588:9
+    at async Xn.generateContent (models.ts:128:14)
+    at async askGemin
+  */
+
+  /* 
+  a quiz and its status, question, correct option and maybe wrong option. it will have one of these three status (correct, incorrect, not answered). 
+
+          based on status explain why the answer is right or wrong in bangla language.
+
+          if status is 'correct' it means the answer is correct. give a brief explanation why the answer is correct
 
           if status is 'wrong' it means the answer is wrong.
-          to understand what was chosen check for class "wrong". 
-          to understand what was chosen check for class "correct".
-          text
           give a brief explanation why the answer is wrong comparing with the correct option
 
-          if status is 'not answered' it means the question was skipper. to understand what is the correct check for class "correct". give a brief explanation why the answer is correct comparing with the other options
+          if status is 'not answered' it means the question was skipped.
 
-          the html container is ${questionContainer}
-  
+          if status is 'not answered' it means the question was skipped.  give a brief explanation why the Right Option is correct.
+          
+          avoid unecessary details
+          
+          Status:${qStatus}
+          Question: ${qText}
+          Right Option: ${qRightOptions}
+          ${qWrongOptions ? "Wrong Option:" + qWrongOptions.innerHTML : ""}
+
+          
   */
-  //   async function askGemini() {
-  //   try {
-  //     aiOutput.innerText = "Thinking...";
-
-  //     const response = await geminiAi.models.generateContent({
-  //       model: 'gemini-2.5-flash',
-  //       contents: 'give me a shot explanation of html using easy english',
-  //     });
-
-  //     aiOutput.innerText = response.text;
-  //   } catch (error) {
-  //     console.error("Gemini Error:", error);
-  //   }
-  // }
-
-  // aiExplainBtn.addEventListener('click', askGemini);
 })();
