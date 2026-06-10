@@ -13,15 +13,16 @@ if (!isset($_GET['category_id'])) {
   header("location: courses.php");
 }
 
+$category_id = $_GET['category_id'];
 // Category details
-$sql = "SELECT id,name,description FROM `quiz_category` WHERE id={$_GET['category_id']}";
+$sql = "SELECT id,name,description FROM `quiz_category` WHERE id=$category_id";
 
 $result = $db->query($sql);
 $details = $result->fetch_assoc();
 
 // quizzes details
 
-$quiz_result = $db->query("SELECT * FROM `quizzes` WHERE quiz_category_id={$_GET['category_id']}");
+$quiz_result = $db->query("SELECT * FROM `quizzes` WHERE quiz_category_id=$category_id");
 $quizzes = $quiz_result->fetch_all(MYSQLI_ASSOC);
 
 // echo "<pre>";
@@ -29,245 +30,14 @@ $quizzes = $quiz_result->fetch_all(MYSQLI_ASSOC);
 // echo "</pre>";
 ?>
 
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?= $details["name"] ?></title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    .course-hero {
-      background: linear-gradient(135deg, rgba(92, 51, 246, .07), rgba(92, 51, 246, .02));
-      border-bottom: 1.5px solid var(--border);
-      padding: 48px 0 36px;
-    }
-
-    .course-hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 44px;
-      align-items: start;
-    }
-
-    .sticky-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 26px;
-      box-shadow: var(--shadow-md);
-      position: sticky;
-      top: calc(var(--nav-h) + 20px);
-    }
-
-    .module-item {
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      margin-bottom: 9px;
-      overflow: hidden;
-      transition: border-color var(--transition);
-    }
-
-    .module-item:hover {
-      border-color: var(--primary);
-    }
-
-    .module-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      background: var(--surface);
-      user-select: none;
-      cursor: pointer;
-    }
-
-    .module-header.open {
-      background: var(--primary-faint);
-    }
-
-    .module-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: .8rem;
-      flex-shrink: 0;
-    }
-
-    .module-num.done {
-      background: var(--green);
-      color: #fff;
-    }
-
-    .module-num.active {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .module-num.locked {
-      background: var(--border);
-      color: var(--slate);
-    }
-
-    .module-num.pending {
-      background: var(--primary-faint);
-      color: var(--primary);
-    }
-
-    .module-title {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: .9rem;
-      color: var(--navy);
-      flex: 1;
-    }
-
-    .module-status {
-      font-size: .76rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .module-status.done {
-      color: var(--green-dark);
-    }
-
-    .module-status.active {
-      color: var(--primary);
-    }
-
-    .module-status.locked {
-      color: var(--slate);
-    }
-
-    .module-quizzes {
-      display: none;
-      padding: 0 16px 12px 60px;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .module-quizzes.open {
-      display: flex;
-    }
-
-    .quiz-item {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      font-size: .82rem;
-      color: var(--navy);
-      transition: all var(--transition);
-    }
-
-    .quiz-item:hover {
-      background: var(--primary-faint);
-    }
-
-    .qi-score {
-      margin-left: auto;
-      font-family: var(--font-mono);
-      font-size: .76rem;
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .checklist-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 7px;
-      font-size: .84rem;
-      color: var(--slate);
-      margin-bottom: 5px;
-    }
-
-    .checklist-item::before {
-      content: '✓';
-      color: var(--green-dark);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    @media(max-width:900px) {
-      .course-hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .sticky-card {
-        position: static;
-      }
-    }
-
-    /* Content Main */
-    .content-main {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    @media (min-width: 768px) {
-      .content-main {
-        grid-template-columns: 7fr 3fr;
-        gap: 40px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <nav class="navbar">
-    <div class="container">
-      <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
-      <div class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="courses.html" class="active">Courses</a>
-        <a href="progress.html">My Progress</a>
-        <a href="leaderboard.html">Leaderboard</a>
-        <a href="ai-generator.html">AI Tools</a>
-      </div>
-      <div class="nav-actions"><a href="profile.html" class="nav-avatar">AR</a></div>
-      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    </div>
-  </nav>
-  <div class="mobile-nav" id="mobileNav">
-    <div class="mobile-nav-inner">
-      <div class="mobile-nav-user">
-        <div class="nav-avatar">AR</div>
-        <div>
-          <div class="mobile-nav-user-name">Abdullah Rashid</div>
-          <div class="mobile-nav-user-email">abdullah@example.com</div>
-        </div>
-      </div>
-      <div class="mobile-nav-section">Navigation</div>
-      <a href="dashboard.html" class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
-      <a href="courses.html" class="mobile-nav-link active"><span class="icon">📚</span> Courses</a>
-      <a href="progress.html" class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
-      <a href="leaderboard.html" class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
-      <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
-      <div class="mobile-nav-divider"></div>
-      <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
-      <a href="login.html" class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
-    </div>
-  </div>
+<!-- Header -->
+<?php include_once "header.php" ?>
 
   <!-- Breadcrumb -->
   <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:10px 0">
     <div class="container">
       <div style="display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--slate)">
-        <a href="courses.html" style="color:var(--primary);font-weight:700">Courses</a>
+        <a href="courses.php" style="color:var(--primary);font-weight:700">Courses</a>
         <span>›</span><span><?= $details["name"] ?></span>
       </div>
     </div>
@@ -337,7 +107,7 @@ $quizzes = $quiz_result->fetch_all(MYSQLI_ASSOC);
           <div class="tab-panel active" data-tab-panel="modules">
             <div class="module-quizzes open">
               <?php foreach ($quizzes as $quiz) : ?>
-                <a href="quiz.php?quiz-id=<?= $quiz['id'] ?>" class="quiz-item"><span>📝</span> <?= $quiz['quiz_name'] ?><span class="qi-score"><?= $quiz['score'] ?></span></a>
+                <a href="quiz.php?quiz-id=<?= $quiz['id'] ?>&category_id=<?= $category_id ?>" class="quiz-item"><span>📝</span> <?= $quiz['quiz_name'] ?><span class="qi-score"><?= $quiz['score'] ?></span></a>
               <?php endforeach ?>
             </div>
             <!-- <div data-accordion>
@@ -499,7 +269,5 @@ $quizzes = $quiz_result->fetch_all(MYSQLI_ASSOC);
     </div>
   </div>
 
-  <script src="assets/js/main.js"></script>
-</body>
-
-</html>
+<!-- footer -->
+<?php include_once "footer.php" ?>

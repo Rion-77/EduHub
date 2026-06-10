@@ -1,0 +1,47 @@
+
+Step 2: Update Your HTML FileOpen your index.html file and link your JavaScript file using a module script tag:html<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EduHub AI</title>
+</head>
+<body>
+    <button id="hamburger">Menu Toggle</button>
+    <button id="ai-btn">Ask Gemini</button>
+    <p id="ai-output"></p>
+
+    <!-- Essential: Type MUST be module -->
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
+Use code with caution.Step 3: Rewrite Your assets/js/main.jsReplace the code inside your browser script to import the web-native client stub directly from a content delivery network (CDN) like ESMSH. This allows your hamburger menu and your Gemini code to run smoothly together in the browser.javascript// 1. Import the browser-compatible Google Gen AI SDK
+import { GoogleGenAI } from 'https://esm.sh';
+
+// 2. Your existing frontend code will now work perfectly
+var hamburger = document.getElementById('hamburger');
+hamburger.addEventListener('click', () => {
+    console.log("Hamburger menu clicked!");
+});
+
+// 3. Initialize Gemini with your API Key
+// Hardcode your key ONLY for quick local testing. Do not push this to GitHub!
+const ai = new GoogleGenAI({ apiKey: "YOUR_GEMINI_API_KEY_HERE" });
+
+async function askGemini() {
+  try {
+    const outputElement = document.getElementById('ai-output');
+    outputElement.innerText = "Thinking...";
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: 'Give me a quick 1-sentence tip for studying coding.',
+    });
+
+    outputElement.innerText = response.text;
+  } catch (error) {
+    console.error("Gemini Error:", error);
+  }
+}
+
+// Attach the function to a frontend button click
+document.getElementById('ai-btn').addEventListener('click', askGemini);

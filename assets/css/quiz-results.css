@@ -1,0 +1,254 @@
+body {
+  background: linear-gradient(135deg, #f6f2ff 0%, #fffbec 100%);
+}
+
+.results-hero {
+  text-align: center;
+  padding: 52px 24px 36px;
+}
+
+.confetti {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  animation: bounce 0.8s ease-in-out;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-18px);
+  }
+
+  60% {
+    transform: translateY(-8px);
+  }
+}
+
+.results-body {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 28px 0;
+}
+
+.score-box {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+}
+
+.score-box .val {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.score-box .lbl {
+  font-size: 0.76rem;
+  color: var(--slate);
+  margin-top: 3px;
+}
+
+.xp-toast {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.xp-toast h4 {
+  color: #fff;
+  font-size: 0.97rem;
+}
+
+.xp-toast p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.83rem;
+  margin-top: 2px;
+}
+
+/* Review questions */
+.review-q {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-bottom: 14px;
+}
+
+.q-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 3px 11px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 10px;
+}
+
+.q-status.correct {
+  background: var(--green-faint);
+  color: var(--green-dark);
+}
+
+.q-status.wrong {
+  background: var(--coral-faint);
+  color: #b02020;
+}
+
+.q-status.skipped {
+  background: rgba(107, 114, 128, 0.1);
+  color: var(--slate);
+}
+
+.review-q .q-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.93rem;
+  color: var(--navy);
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+
+.review-options {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.review-option {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  font-size: 0.86rem;
+  border-color: #7f8c8d;
+  background: #f9f9f9;
+}
+
+.review-option.correct {
+  border-color: var(--green);
+  background: var(--green-faint);
+}
+
+.review-option.wrong {
+  border-color: var(--coral);
+  background: var(--coral-faint);
+}
+
+.ro-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.76rem;
+  background: var(--border);
+  color: var(--slate);
+}
+
+.review-option.correct .ro-letter {
+  background: var(--green);
+  color: #fff;
+}
+
+.review-option.wrong .ro-letter {
+  background: var(--coral);
+  color: #fff;
+}
+
+.ro-flag {
+  margin-left: auto;
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ai-explain {
+  margin-top: 12px;
+  background: linear-gradient(135deg, rgba(92, 51, 246, 0.05), rgba(92, 51, 246, 0.02));
+  border: 1.5px solid rgba(92, 51, 246, 0.15);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.ai-explain p {
+  font-size: 0.86rem;
+  color: var(--navy);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+/* Review filter tabs */
+.review-tabs {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.review-tab {
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--slate);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.review-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.review-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* Footer */
+.footer {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .score-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .xp-toast {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

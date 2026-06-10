@@ -3,6 +3,11 @@ Students can participate in various quiz related to their isdb course. It will h
 
 
 
+features 
+- Mcq exam on multiple topics
+- 
+
+
 they website will have ai integration with functionalities like
 - Students can generate their own quizes from the topic they like.
 - if they fails to understand any question they can see an explanation provided by the ai.

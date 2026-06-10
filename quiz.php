@@ -5,6 +5,8 @@ if(!isset($_GET['quiz-id'])){
   header("location: courses.php");
 }
 
+
+
 $quiz_id = $_GET['quiz-id'];
 
 // Quiz Details
@@ -40,62 +42,8 @@ $question_counter = 0;
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz – EduHub</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/quiz.css" />
-  <style>
-    
-  </style>
-</head>
-
-<body>
-
-  <!-- ═══ NAVBAR ═══ -->
-  <!-- <?php include 'includes/navbar.php'; ?> -->
-  <nav class="navbar">
-    <div class="container">
-      <a href="index.html" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
-      <div class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="courses.html" class="active">Courses</a>
-        <a href="progress.html">My Progress</a>
-        <a href="leaderboard.html">Leaderboard</a>
-        <a href="ai-generator.html">AI Tools</a>
-      </div>
-      <div class="nav-actions">
-        <a href="profile.html" class="nav-avatar">AR</a>
-      </div>
-      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
-  <div class="mobile-nav" id="mobileNav">
-    <div class="mobile-nav-inner">
-      <div class="mobile-nav-user">
-        <div class="nav-avatar">AR</div>
-        <div>
-          <div class="mobile-nav-user-name">Abdullah Rashid</div>
-          <div class="mobile-nav-user-email">abdullah@example.com</div>
-        </div>
-      </div>
-      <div class="mobile-nav-section">Navigation</div>
-      <a href="dashboard.html" class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
-      <a href="courses.html" class="mobile-nav-link active"><span class="icon">📚</span> Courses</a>
-      <a href="progress.html" class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
-      <a href="leaderboard.html" class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
-      <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
-      <div class="mobile-nav-divider"></div>
-      <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
-      <a href="login.html" class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
-    </div>
-  </div>
+<!-- Header -->
+<?php include_once "header.php" ?>
 
 
   <!-- ═══ STICKY TOP BAR ═══ -->
@@ -104,7 +52,9 @@ $question_counter = 0;
 
     <!-- Row 1: back | title | timer | quit -->
     <div class="quiz-info-row">
-      <a href="course-detail.html" class="quiz-back-btn" title="Back to course">←</a>
+      <?php if(isset($_GET['category_id'])) :?>
+        <a href="course-detail.php?category_id=<?= $_GET['category_id'] ?>" class="quiz-back-btn" title="Back to course">←</a>
+      <?php endif ?>
       <!-- PHP: echo $quiz->course_name . ' – ' . $quiz->title -->
       <div class="quiz-title"><?= $quiz_details['quiz_name'] ?></div>
       <!-- Timer — updated by JS countdown -->
@@ -128,10 +78,14 @@ $question_counter = 0;
 
 
   <!-- ═══ QUIZ BODY ═══ -->
-  <form action="quiz-results.php" method="POST"> 
+  <form action="quiz-results.php" method="POST">
+     <!-- Hidden fields for quiz and cateory id  -->
     <input type="hidden" name="quiz-id" value="<?= $_GET['quiz-id'] ?>">
+    <?php if(isset($_GET['category_id'])) :?>
+        <input type="hidden" name="category_id" value="<?= $_GET['category_id'] ?>">
+    <?php endif ?>
   <div class="quiz-body">
-    <!-- PHP: foreach ($questions as $i => $q) -->
+
     <div class="quiz-card">
 
       <!-- Card header -->
@@ -190,7 +144,6 @@ $question_counter = 0;
   </form>
 
 
-  <script src="assets/js/main.js"></script>
   <script>
     /* ─── QUIZ PAGE INTERACTIVITY ─── */
     (function() {
@@ -290,6 +243,5 @@ $question_counter = 0;
     })();
   </script>
 
-</body>
-
-</html>
+<!-- footer -->
+<?php include_once "footer.php" ?>
