@@ -3,18 +3,21 @@
 
 -- Users table
 
-CREATE TABLE users {
+CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR,
-    email VARCHAR,
-    password VARCHAR,
-    user_role INT
-};
+    name VARCHAR(100),
+    email VARCHAR(100),
+    password VARCHAR(255),
+    user_role INT,
+    user_picture_link VARCHAR(255)
+);
 
-CREATE TABLE user_roles {
+INSERT INTO users (name, email, password, user_role, user_picture_link) VALUES ('Shahed Rion', 'Testmailrion@gmail.com', '12346', 1, 'assets/img/admin.webp');
+
+CREATE TABLE user_roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR
-}
+    name VARCHAR(100)
+);
 
 
 -- ------------------------------------
@@ -24,12 +27,10 @@ CREATE TABLE user_roles {
 
 CREATE TABLE quiz_category (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100)
+    name VARCHAR(100),
+    parent_id INT DEFAULT 0,
+    description text
 );
-
-INSERT INTO quiz_category (name) VALUES ("HTML"), ("CSS"), ("BootStrap"), ("Javascript");
-
-
 
 -- Quizzes table
 CREATE TABLE quizzes (
@@ -47,7 +48,7 @@ CREATE TABLE question_types (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100)
 );
-INSERT INTO question_types (name) VALUES ('mcq');
+
 
 -- Questions
 CREATE TABLE questions (
@@ -58,7 +59,7 @@ CREATE TABLE questions (
 );
 
 
-
+-- Question options
 CREATE TABLE question_options (
      id INT PRIMARY KEY AUTO_INCREMENT,
      option_text TEXT,
@@ -70,22 +71,23 @@ CREATE TABLE question_options (
 -- User quiz related tables
 
 -- user attempts
-CREATE TABLE user_quiz_attempts {
+CREATE TABLE user_quiz_attempts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     quiz_id INT,
     user_quiz_score INT,
     attempt_at time
-}
+);
 
 --user answers 
 
-CREATE TABLE user_answers {
+CREATE TABLE user_answers (
     id INT PRIMARY KEY AUTO_INCREMENT,
     question_id INT,
     user_id INT,
-    selected_option_id INT
-}
+    selected_option_id INT,
+    user_attempt_id INT
+);
 
 
 

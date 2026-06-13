@@ -1,4 +1,18 @@
 -- =============================================
+-- User Data
+-- =============================================
+
+-- User roles
+INSERT INTO user_roles (name) VALUES ("admin");
+INSERT INTO user_roles (name) VALUES ("moderator");
+INSERT INTO user_roles (name) VALUES ("student");
+
+
+
+-- Question type
+INSERT INTO question_types (name) VALUES ('mcq');INSERT INTO question_types (name) VALUES ('mcq');
+
+-- =============================================
 -- HTML Basic Questions (Quiz ID = 1, Type ID = 1)
 -- Manual IDs from 1 to 20
 -- =============================================

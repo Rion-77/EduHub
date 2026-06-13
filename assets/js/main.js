@@ -341,7 +341,7 @@ import { GoogleGenAI } from "https://esm.sh/@google/genai";
 
   // api key
 
-  // const geminiAi = new GoogleGenAI({ apiKey: "API KEY HERE" });
+  const geminiAi = new GoogleGenAI({ apiKey: " API KEY HERE" });
 
   const googleApiErrors = {
     400: {
