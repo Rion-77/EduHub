@@ -1,3 +1,8 @@
+<?php ob_start(); ?>
+
+
+<?php require_once "config/db.php" ?>
+
 
 <!-- Global Header -->
 <?php include_once "views/layouts/header.php"; ?>

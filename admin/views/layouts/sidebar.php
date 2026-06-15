@@ -130,6 +130,11 @@
                                 <span class="nav-main-link-name">All Users</span>
                             </a>
                         </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="create-user">
+                                <span class="nav-main-link-name">Add User</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
