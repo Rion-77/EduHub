@@ -140,7 +140,7 @@ if (isset($_POST['submit-btn'])) {
 
                     <!-- Submit -->
                     <div class="row items-push">
-                        <div class="col-lg-7 offset-lg-4">
+                        <div class="col-lg-7">
                             <button type="submit" class="btn btn-alt-primary" name="submit-btn">Add user</button>
                         </div>
                     </div>

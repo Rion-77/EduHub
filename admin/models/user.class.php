@@ -30,18 +30,6 @@ class User
         }
     }
 
-    static public function delete($_id)
-    {
-        global $db;
-        $sql = "DELETE FROM users WHERE id = $_id";
-        $db->query($sql);
-        if ($db->error) {
-            return $db->error;
-        } else {
-            return true;
-        }
-    }
-
     static public function readAll()
     {
         global $db;
@@ -56,5 +44,29 @@ class User
         $sql = "SELECT u.id,u.name ,u.email,u.user_role role, u.user_picture_link FROM users u WHERE u.id = $_id";
         $result = $db->query($sql);
         return $result->fetch_assoc();
+    }
+
+    public function update()
+    {
+        global $db;
+        $sql = "UPDATE users SET name = '$this->name', email = '$this->email', user_role = $this->role_id WHERE id = $this->id";
+        $db->query($sql);
+        if ($db->error) {
+            return $db->error;
+        } else {
+            return true;
+        }
+    }
+
+     static public function delete($_id)
+    {
+        global $db;
+        $sql = "DELETE FROM users WHERE id = $_id";
+        $db->query($sql);
+        if ($db->error) {
+            return $db->error;
+        } else {
+            return true;
+        }
     }
 }

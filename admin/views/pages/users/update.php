@@ -10,9 +10,9 @@ if (isset($_GET["id"])) {
 }
 
 $row = User::readById($id);
-echo "<pre>";
-print_r($row);
-echo "</pre>";
+// echo "<pre>";
+// print_r($row);
+// echo "</pre>";
 
 
 /* ************************************* */
@@ -29,9 +29,19 @@ if (isset($_POST['submit-btn'])) {
     $name = $_POST['val-username'];
     $email = $_POST['val-email'];
     $role_id = $_POST['val-role'];
-    $pass = $_POST['val-password'];
-    $confirm_pass = $_POST['val-confirm-password'];
 
+    $user = new User($id, $name, $email, $role_id, null, null);
+
+    $response = $user->update();
+    
+
+  // Checking if update is successful and showing update message
+  if($response === true) {
+    $msg = "<p class='text-success'>User has been updated</p>";
+    header("Location: users");
+  } else {
+    $msg = "<p class='text-danger'>Something went wrong.User can't be updated</p>";
+  }
 
     echo "<pre>";
     // print_r($_POST);
@@ -75,6 +85,7 @@ if (isset($_POST['submit-btn'])) {
             <div class="block block-rounded">
                 <div class="block-header block-header-default">
                     <h3 class="block-title">Edit user</h3>
+                    <?= $msg ?? "" ?>
                 </div>
                 <div class="block-content block-content-full">
                     <!-- Regular -->
@@ -96,7 +107,7 @@ if (isset($_POST['submit-btn'])) {
                                     <?php foreach ($roles as $role) {
                                     $selected = $row["role"] == $role['id'] ? "selected": "";    
                                         ?>
-                                        <option value="<?= $role['id'] ?> <?= $selected ?>"><?= ucfirst($role['name']) ?></option>
+                                        <option value="<?= $role['id'] ?>" <?= $selected ?>><?= ucfirst($role['name']) ?></option>
                                     <?php } ?>
 
                                 </select>
@@ -108,7 +119,7 @@ if (isset($_POST['submit-btn'])) {
                     <!-- Submit -->
                     <div class="row items-push">
                         <div class="col-lg-7 offset-lg-4">
-                            <button type="submit" class="btn btn-alt-primary" name="submit-btn">Add user</button>
+                            <button type="submit" class="btn btn-alt-primary" name="submit-btn">Update</button>
                         </div>
                     </div>
                     <!-- END Submit -->
