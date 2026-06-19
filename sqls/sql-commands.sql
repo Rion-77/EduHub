@@ -39,7 +39,8 @@ CREATE TABLE quizzes (
     quiz_category_id INT,
     description TEXT,
     time_limit TIME,
-    score INT
+    score INT,
+    creator_id INT DEFAULT 0
 );
 
 -- Qusetion types (e.g. mcq, true-false, checkbox etc)
@@ -88,7 +89,6 @@ CREATE TABLE user_answers (
     selected_option_id INT,
     user_attempt_id INT
 );
-
 
 
 

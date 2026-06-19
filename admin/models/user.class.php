@@ -41,7 +41,7 @@ class User
     static public function readById($_id)
     {
         global $db;
-        $sql = "SELECT u.id,u.name ,u.email,u.user_role role, u.user_picture_link FROM users u WHERE u.id = $_id";
+        $sql = "SELECT u.id,u.name ,u.email,u.user_role role, ur.name role_name, u.user_picture_link FROM users u, user_roles ur WHERE u.id = $_id AND u.user_role = ur.id";
         $result = $db->query($sql);
         return $result->fetch_assoc();
     }

@@ -1,5 +1,7 @@
 <?php
+require_once "models/student.class.php";
 require_once "models/role.class.php";
+
 
 /* ************************************* */
 //Check for redirect message
@@ -9,17 +11,16 @@ if (isset($_POST['message'])) {
   $msg = "<p class='text-success mb-1 fw-bold'>" . $_GET['message'] . "</p>";
 }
 
-
 /* ************************************* */
-//delete a role
+//delete an user
 if (isset($_POST['delete-id'])) {
   $delete_id = $_POST['delete-id'];
-  $delete_response = Role::delete($delete_id);
+  $delete_response = Student::delete($delete_id);
 }
 
 /* ************************************* */
-// gets all roles
-$rows = Role::readAll();
+// get all users data
+$rows = Student::readAll();
 // echo "<pre>";
 // print_r($rows);
 // echo "</pre>";
@@ -33,19 +34,19 @@ $rows = Role::readAll();
       <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
         <div class="flex-grow-1">
           <h1 class="h3 fw-bold mb-1">
-            All Roles
+            All Students
           </h1>
           <h2 class="fs-base lh-base fw-medium text-muted mb-0">
-            See the list of all roles and manage them
+            See the list of all students
           </h2>
         </div>
         <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item">
-              <a class="link-fx" href="javascript:void(0)">Roles</a>
+              <a class="link-fx" href="javascript:void(0)">Students</a>
             </li>
             <li class="breadcrumb-item" aria-current="page">
-              All Roles
+              All Students
             </li>
           </ol>
         </nav>
@@ -58,10 +59,10 @@ $rows = Role::readAll();
   <div class="content">
     <!-- Full Table -->
     <div class="block block-rounded">
-      <div class="block-header block-header-default">   
-          <h3 class="block-title">ROLE LIST</h3>
+      <div class="block-header block-header-default">
+        <h3 class="block-title">STUDENTS LIST</h3>
         <div class="block-options">
-         <?= $msg ?? "" ?>
+          <?= $msg ?? "" ?>
         </div>
       </div>
       <div class="block-content">
@@ -70,26 +71,34 @@ $rows = Role::readAll();
           <table class="table table-bordered table-striped table-vcenter">
             <thead>
               <tr>
-                <th>ID</th>
+                <th class="text-center" style="width: 100px;">
+                  <i class="far fa-user"></i>
+                </th>
                 <th>Name</th>
+                <th style="width: 30%;">Email</th>
+                
                 <th class="text-center" style="width: 100px;">Actions</th>
               </tr>
             </thead>
             <tbody class="row-data-container">
               <?php foreach ($rows as $row): ?>
                 <tr class="data-row-parent">
-                  <td class="fw-semibold fs-sm data-row-id">
+                  <td style="display: none;" class="data-row-id">
                     <?= $row['id'] ?>
                   </td>
-                  <td class="fw-semibold fs-sm data-row-name">
-                    <?= $row['name'] ?>
+                  <td class="text-center">
+                    <img class="img-avatar img-avatar48" src="<?= BASE_URL . $row['user_picture_link'] ?>" alt="">
                   </td>
+                  <td class="fw-semibold fs-sm data-row-name">
+                    <a href="user-profile?user-id=<?= $row['id'] ?>"><?= $row['name'] ?></a>
+                  </td>
+                  <td class="fs-sm"><?= $row['email'] ?></td>
                   <td class="text-center">
                     <div class="btn-group">
-                      <a href="edit-role?id=<?= $row['id'] ?>" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
+                      <a href="edit-student?id=<?= $row['id'] ?>" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
                         <i class="fa fa-fw fa-pencil-alt"></i>
                       </a>
-                      <button type="submit" class="btn btn-sm btn-alt-secondary delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                      <button type="button" class="btn btn-sm btn-alt-secondary delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
                         <i class="fa fa-fw fa-times"></i>
                       </button>
                     </div>

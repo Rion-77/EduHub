@@ -1,5 +1,5 @@
 <?php
-require_once "models/user.class.php";
+require_once "models/student.class.php";
 require_once "models/role.class.php";
 
 // Gets user id
@@ -9,7 +9,7 @@ if (isset($_GET["id"])) {
     header("Location: users");
 }
 
-$row = User::readById($id);
+$row = Student::readById($id);
 // echo "<pre>";
 // print_r($row);
 // echo "</pre>";
@@ -33,7 +33,7 @@ if (isset($_POST['submit-btn'])) {
     $email = $_POST['val-email'];
     $role_id = $_POST['val-role'];
 
-    $user = new User($id, $name, $email, $role_id, null, null);
+    $user = new Student($id, $name, $email, $role_id, null, null);
 
     $response = $user->update();
     

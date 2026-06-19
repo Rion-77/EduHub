@@ -118,10 +118,12 @@
                         <span class="nav-main-link-name">Dashboard</span>
                     </a>
                 </li>
+
                 <li class="nav-main-heading">Users Management</li>
+                <!-- Users -->
                 <li class="nav-main-item">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-users"></i>
+                        <i class="nav-main-link-icon si si-user"></i>
                         <span class="nav-main-link-name">Users</span>
                     </a>
                     <ul class="nav-main-submenu">
@@ -137,9 +139,10 @@
                         </li>
                     </ul>
                 </li>
+                <!-- Roles -->
                 <li class="nav-main-item">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-users"></i>
+                        <i class="nav-main-link-icon si si-lock"></i>
                         <span class="nav-main-link-name">Roles</span>
                     </a>
                     <ul class="nav-main-submenu">
@@ -151,6 +154,67 @@
                         <li class="nav-main-item">
                             <a class="nav-main-link" href="create-role">
                                 <span class="nav-main-link-name">Add Roles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-main-heading">Exam Management</li>
+                <!-- Exams -->
+                <li class="nav-main-item">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon si si-doc"></i>
+                        <span class="nav-main-link-name">Exams</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="exams">
+                                <span class="nav-main-link-name">All Exams</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="create-exam">
+                                <span class="nav-main-link-name">Add Exam</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Course Categories -->
+                <li class="nav-main-item">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon si si-layers"></i>
+                        <span class="nav-main-link-name">Course Categories</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="course-categories">
+                                <span class="nav-main-link-name">All Course Categories</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="create-course-category">
+                                <span class="nav-main-link-name">Add Course Category</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-main-heading">Student Management</li>
+                <!-- Students -->
+                <li class="nav-main-item">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon si si-graduation"></i>
+                        <span class="nav-main-link-name">Students</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="students">
+                                <span class="nav-main-link-name">All Students</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="create-student">
+                                <span class="nav-main-link-name">Add Students</span>
                             </a>
                         </li>
                     </ul>

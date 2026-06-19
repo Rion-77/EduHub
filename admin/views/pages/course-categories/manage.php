@@ -1,25 +1,25 @@
 <?php
-require_once "models/role.class.php";
+require_once "models/course-category.class.php";
 
 /* ************************************* */
 //Check for redirect message
+
 if (isset($_POST['message'])) {
   $msg = "<p class='text-danger mb-1 fw-bold'>" . $_POST['message'] . "</p>";
 } elseif (isset($_GET['message'])) {
   $msg = "<p class='text-success mb-1 fw-bold'>" . $_GET['message'] . "</p>";
 }
 
-
 /* ************************************* */
-//delete a role
+//delete a category
 if (isset($_POST['delete-id'])) {
   $delete_id = $_POST['delete-id'];
-  $delete_response = Role::delete($delete_id);
+  $delete_response = CourseCategory::delete($delete_id);
 }
 
 /* ************************************* */
-// gets all roles
-$rows = Role::readAll();
+// gets all Categories
+$rows = CourseCategory::readAll();
 // echo "<pre>";
 // print_r($rows);
 // echo "</pre>";
@@ -33,19 +33,19 @@ $rows = Role::readAll();
       <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
         <div class="flex-grow-1">
           <h1 class="h3 fw-bold mb-1">
-            All Roles
+            Course Categoies
           </h1>
           <h2 class="fs-base lh-base fw-medium text-muted mb-0">
-            See the list of all roles and manage them
+            See the list of all course category and manage them
           </h2>
         </div>
         <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item">
-              <a class="link-fx" href="javascript:void(0)">Roles</a>
+              <a class="link-fx" href="javascript:void(0)">Course Categories</a>
             </li>
             <li class="breadcrumb-item" aria-current="page">
-              All Roles
+              All Course Categories
             </li>
           </ol>
         </nav>
@@ -58,10 +58,10 @@ $rows = Role::readAll();
   <div class="content">
     <!-- Full Table -->
     <div class="block block-rounded">
-      <div class="block-header block-header-default">   
-          <h3 class="block-title">ROLE LIST</h3>
+      <div class="block-header block-header-default">
+          <h3 class="block-title">COURSE CATEGORY LIST</h3>
         <div class="block-options">
-         <?= $msg ?? "" ?>
+           <?= $msg ?? "" ?>
         </div>
       </div>
       <div class="block-content">
@@ -72,6 +72,7 @@ $rows = Role::readAll();
               <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Description</th>
                 <th class="text-center" style="width: 100px;">Actions</th>
               </tr>
             </thead>
@@ -84,12 +85,15 @@ $rows = Role::readAll();
                   <td class="fw-semibold fs-sm data-row-name">
                     <?= $row['name'] ?>
                   </td>
+                  <td class=" fs-sm">
+                    <?= $row['description'] ?>
+                  </td>
                   <td class="text-center">
                     <div class="btn-group">
-                      <a href="edit-role?id=<?= $row['id'] ?>" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
+                      <a href="edit-course-category?id=<?= $row['id'] ?>" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
                         <i class="fa fa-fw fa-pencil-alt"></i>
                       </a>
-                      <button type="submit" class="btn btn-sm btn-alt-secondary delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                      <button type="button" class="btn btn-sm btn-alt-secondary delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
                         <i class="fa fa-fw fa-times"></i>
                       </button>
                     </div>

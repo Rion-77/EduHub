@@ -2,18 +2,23 @@
 require_once "models/user.class.php";
 require_once "models/role.class.php";
 
+
+/* ************************************* */
+//Check for redirect message
+if (isset($_POST['message'])) {
+  $msg = "<p class='text-danger mb-1 fw-bold'>" . $_POST['message'] . "</p>";
+} elseif (isset($_GET['message'])) {
+  $msg = "<p class='text-success mb-1 fw-bold'>" . $_GET['message'] . "</p>";
+}
+
+/* ************************************* */
 //delete an user
 if (isset($_POST['delete-id'])) {
   $delete_id = $_POST['delete-id'];
   $delete_response = User::delete($delete_id);
-
-  // Checking if delete is successful and showing delete message
-  if($delete_response === true) {
-    $msg = "<p class='text-danger'>User has been deleted</p>";
-  } 
 }
 
-
+/* ************************************* */
 // get all users data
 $rows = User::readAll();
 // echo "<pre>";
@@ -56,11 +61,8 @@ $rows = User::readAll();
     <div class="block block-rounded">
       <div class="block-header block-header-default">
         <h3 class="block-title">USER LIST</h3>
-        <?= $msg ?? "" ?>
         <div class="block-options">
-          <button type="button" class="btn-block-option">
-            <i class="si si-settings"></i>
-          </button>
+          <?= $msg ?? "" ?>
         </div>
       </div>
       <div class="block-content">
@@ -78,14 +80,17 @@ $rows = User::readAll();
                 <th class="text-center" style="width: 100px;">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="row-data-container">
               <?php foreach ($rows as $row): ?>
-                <tr>
+                <tr class="data-row-parent">
+                  <td style="display: none;" class="data-row-id">
+                    <?= $row['id'] ?>
+                  </td>
                   <td class="text-center">
                     <img class="img-avatar img-avatar48" src="<?= BASE_URL . $row['user_picture_link'] ?>" alt="">
                   </td>
-                  <td class="fw-semibold fs-sm">
-                    <a href="be_pages_generic_profile.html"><?= $row['name'] ?></a>
+                  <td class="fw-semibold fs-sm data-row-name">
+                    <a href="user-profile?user-id=<?= $row['id'] ?>"><?= $row['name'] ?></a>
                   </td>
                   <td class="fs-sm"><?= $row['email'] ?></td>
                   <td>
@@ -96,14 +101,9 @@ $rows = User::readAll();
                       <a href="edit-user?id=<?= $row['id'] ?>" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
                         <i class="fa fa-fw fa-pencil-alt"></i>
                       </a>
-                      <form method="post">
-                        <input type="hidden" name="delete-id" value="<?= $row["id"] ?>">
-                        <!-- <button type="submit" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Delete">
-                          <i class="fa fa-fw fa-times"></i>
-                        </button> -->
-                        <button type="submit" class="btn btn-sm btn-alt-secondary" title="Delete">
-                          <i class="fa fa-fw fa-times"></i>
-                        </button>
+                      <button type="button" class="btn btn-sm btn-alt-secondary delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fa fa-fw fa-times"></i>
+                      </button>
                       </form>
 
                     </div>
@@ -120,3 +120,6 @@ $rows = User::readAll();
   </div>
   <!-- END Page Content -->
 </main>
+
+<!-- Delete Modal -->
+<?php include_once "views/layouts/delete-modal.php" ?>

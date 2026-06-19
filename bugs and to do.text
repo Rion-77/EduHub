@@ -1,5 +1,7 @@
 // To do
 1. quiz-page - fix countdown timer
+2. Category Page - Admin - Add proper dislpay of categoies and their childs
+3. Add validation and sanitization in every input
 
 // Bugs
-1. quiz result page- last 2 mcq are the same
+1. quiz result page- last 2 mcq are the same (fixed)

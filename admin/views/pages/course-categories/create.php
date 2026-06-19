@@ -1,45 +1,17 @@
 <?php
-require_once "models/role.class.php";
+require_once "models/course-category.class.php";
 
-// Gets user id
-if (isset($_GET["id"])) {
-    $id = $_GET["id"];
-} else {
-    header("Location: users");
-}
-
-$row = Role::readById($id);
-// echo "<pre>";
-// print_r($row);
-// echo "</pre>";
-
-if (empty($row)) {
-    header("Location: roles?message=Role+with+id='$id'+Do+not+Exists");
-}
 
 /* ************************************* */
-// gets form data and updates data 
-
-
-
+// gets form data and uploads data to database 
 if (isset($_POST['submit-btn'])) {
     $name = $_POST['val-name'];
+    $description = $_POST['val-description'];
 
-    $role = new Role($id, $name);
-    $response = $role->update();
+    $course_category = new CourseCategory(null, $name, $description, null);
+    $course_category->create();
 
-
-  // Checking if update is successful and showing update message
-  if($response === true) {
-    header("Location: roles?message=Role+'$name'+Has+been+Edited+Successfully");
-  } else {
-    $msg = "<p class='text-danger'>Something went wrong.Role can't be updated</p>";
-  }
-
-    echo "<pre>";
-    // print_r($_POST);
-    // print_r($profile_picture);
-    echo "</pre>";
+    header("Location: course-categories");
 }
 ?>
 
@@ -50,19 +22,19 @@ if (isset($_POST['submit-btn'])) {
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
                 <div class="flex-grow-1">
                     <h1 class="h3 fw-bold mb-1">
-                        Add Role
+                        Add Course Category
                     </h1>
                     <h2 class="fs-base lh-base fw-medium text-muted mb-0">
-                        Add a new role
+                        Add a new Course Category
                     </h2>
                 </div>
                 <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-alt">
                         <li class="breadcrumb-item">
-                            <a class="link-fx" href="javascript:void(0)">Roles</a>
+                            <a class="link-fx" href="javascript:void(0)">Course Categories</a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">
-                            Update Role
+                            Add Course Category
                         </li>
                     </ol>
                 </nav>
@@ -76,22 +48,26 @@ if (isset($_POST['submit-btn'])) {
 
         <form class="js-validation" method="POST" novalidate="novalidate">
             <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">Update Role Form</h3>
-                </div>
+                <!-- <div class="block-header block-header-default">
+                    <h3 class="block-title">New Category</h3>
+                </div> -->
                 <div class="block-content block-content-full">
                     <!-- Regular -->
 
                     <div class="row items-push align-items-center">
                         <div class="col-lg-8 col-xl-5">
                             <div class="">
-                                <label class="form-label" for="val-name">New Role Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="val-name" name="val-name" value="<?= $row['name'] ?>">
+                                <label class="form-label" for="val-name">Category Name</label>
+                                <input type="text" class="form-control" id="val-name" name="val-name" placeholder="Enter New Category Name">
+                            </div>
+                            <div class="">
+                                <label class="form-label" for="val-description">Category description</label>
+                                <textarea class="form-control" id="val-description" name="val-description" placeholder="Enter New Role description"></textarea>
                             </div>
                         </div>
                         <!-- Submit -->
                         <div class="col-l2">
-                            <button type="submit" class="btn btn-alt-primary" name="submit-btn">Add Role</button>
+                            <button type="submit" class="btn btn-alt-primary" name="submit-btn">Add Category</button>
                         </div>
                         <!-- END Submit -->
                     </div>
