@@ -1,0 +1,21 @@
+AI assisted mcq exam website
+
+Goals
+- traditional features of a Mcq website
+- Leaderboard system
+- Tracking system which quiz was alreadey given with scores
+
+AI integrated with features
+- Students can generate their own quizes from the topic they like.
+- if they fails to understand any question they can see an explanation provided by the ai. (done)
+
+Alreay done
+- Exam and questions can be added from admin
+- User report on their entire exam history
+- Crud operation of basic features
+
+Will be added later 
+- Student login system
+- Leaderboard system
+- Tracking system which quiz was alreadey given with scores
+- Students can generate their own quizes from the topic they like.

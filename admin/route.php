@@ -43,7 +43,11 @@ if (isset($_GET["page"])) {
         include_once("views/pages/exams/update.php");
     } elseif ($page == "questions" || $page == "questions.php") {
         include_once("views/pages/exams/questions.php");
-    } 
+    } elseif ($page == "create-question" || $page == "create-question.php") {
+        include_once("views/pages/exams/create-question.php");
+    } elseif ($page == "edit-question" || $page == "edit-question.php") {
+        include_once("views/pages/exams/edit-question.php");
+    }
     // Course Categoris Route
     elseif ($page == "course-categories" || $page == "course-categories.php") {
         include_once("views/pages/course-categories/manage.php");
