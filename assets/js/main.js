@@ -452,14 +452,7 @@ import { GoogleGenAI } from "https://esm.sh/@google/genai";
     askGemini();
   });
 
-  /* 
   
-  Gemini Error: ApiError: {"error":{"code":429,"message":"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash-lite\nPlease retry in 4.697527827s.","status":"RESOURCE_EXHAUSTED","details":[{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-2.5-flash-lite"},"quotaValue":"20"}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"4s"}]}}
-    at Ii (_api_client.ts:983:24)
-    at async _api_client.ts:588:9
-    at async Xn.generateContent (models.ts:128:14)
-    at async askGemin
-  */
 
   /* 
   a quiz and its status, question, correct option and maybe wrong option. it will have one of these three status (correct, incorrect, not answered). 

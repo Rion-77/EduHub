@@ -2,11 +2,11 @@
     <!-- Side Header -->
     <div class="content-header">
         <!-- Logo -->
-        <a class="fw-semibold text-dual" href="index.html">
+        <a class="fw-semibold text-dual" href="https://eduhub.rioncreates.com/">
             <span class="smini-visible">
                 <i class="fa fa-circle-notch text-primary"></i>
             </span>
-            <span class="smini-hide fs-5 tracking-wider">OneUI</span>
+            <span class="smini-hide fs-5 tracking-wider">Eduhub</span>
         </a>
         <!-- END Logo -->
 
@@ -218,6 +218,23 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <!-- Leaderboard -->
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="leaderboard">
+                        <i class="nav-main-link-icon si si-trophy"></i>
+                        <span class="nav-main-link-name">Leaderboard</span>
+                    </a>
+                </li>
+
+                <li class="nav-main-heading">AI Features</li>
+
+                <!-- AI Features -->
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="leaderboard">
+                        <i class="nav-main-link-icon si si-bulb"></i> 
+                        <span class="nav-main-link-name">AI Quiz Generator</span>
+                    </a>
                 </li>
             </ul>
         </div>

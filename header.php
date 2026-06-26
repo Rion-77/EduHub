@@ -39,7 +39,7 @@ if (file_exists($cssFilePath)) {
         <a href="courses.php" class="active">Courses</a>
         <a href="progress.html">My Progress</a>
         <a href="leaderboard.html">Leaderboard</a>
-        <a href="ai-generator.html">AI Tools</a>
+        <a href="ai-generator.php">AI Tools</a>
       </div>
       <div class="nav-actions"><a href="profile.html" class="nav-avatar">AR</a></div>
       <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
