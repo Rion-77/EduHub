@@ -38,8 +38,9 @@ class Quiz
         }
     }
 
-    static public function readAll()
+    static public function readAll($page_no = 1 ,$display_item = 10)
     {
+        $limit = ($page_no - 1) * $display_item;
         global $db;
         $sql = "SELECT 
         q.id, 
@@ -49,7 +50,7 @@ class Quiz
         q.time_limit, 
         q.score
         FROM quizzes q, quiz_category qc 
-        WHERE q.quiz_category_id = qc.id";
+        WHERE q.quiz_category_id = qc.id LIMIT $display_item OFFSET $limit";
         $result = $db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
@@ -99,4 +100,15 @@ class Quiz
             return true;
         }
     }
+    // For Pagination
+    static public function numberOfPage($display_item)
+    {
+        global $db;
+        $sql = "SELECT count(id) total
+        FROM quizzes";
+        $result = $db->query($sql);
+        $rows = $result->fetch_assoc();
+        return ceil($rows['total']/$display_item);
+    }
+
 }

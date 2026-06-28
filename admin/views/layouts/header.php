@@ -1,11 +1,12 @@
-<?php 
+<?php
 include_once "config/base.php";
 ?>
 <!doctype html>
 <html lang="en" class="remember-theme">
-  <head>
-    <meta charset="utf-8">
-    <!--
+
+<head>
+  <meta charset="utf-8">
+  <!--
       Available classes for <html> element:
 
       'dark'                  Enable dark mode - Default dark mode preference can be set in app.js file (always saved and retrieved in localStorage afterwards):
@@ -14,39 +15,42 @@ include_once "config/base.php";
       'remember-theme'        Remembers active color theme between pages using localStorage when set through
                                 - Theme helper buttons [data-toggle="theme"]
     -->
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Eduhub - Admin</title>
+  <title>Eduhub - Admin</title>
 
-    <meta name="description" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
-    <meta name="author" content="pixelcave">
-    <meta name="robots" content="index, follow">
+  <meta name="description" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
+  <meta name="author" content="pixelcave">
+  <meta name="robots" content="index, follow">
 
-    <!-- Open Graph Meta -->
-    <meta property="og:title" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework">
-    <meta property="og:site_name" content="OneUI">
-    <meta property="og:description" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
+  <!-- Open Graph Meta -->
+  <meta property="og:title" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework">
+  <meta property="og:site_name" content="OneUI">
+  <meta property="og:description" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
 
-    <!-- Icons -->
-    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
-    <link rel="shortcut icon" href="<?= BASE_URL_ADMIN ?>assets/media/favicons/favicon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="<?= BASE_URL_ADMIN ?>assets/media/favicons/favicon-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= BASE_URL_ADMIN ?>assets/media/favicons/apple-touch-icon-180x180.png">
-    <!-- END Icons -->
+  <!-- Icons -->
+  <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+  <link rel="shortcut icon" href="<?= BASE_URL_ADMIN ?>assets/media/favicons/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="<?= BASE_URL_ADMIN ?>assets/media/favicons/favicon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= BASE_URL_ADMIN ?>assets/media/favicons/apple-touch-icon-180x180.png">
+  <!-- END Icons -->
 
-    <!-- Stylesheets -->
-    <!-- OneUI framework -->
-    <link rel="stylesheet" id="css-main" href="<?= BASE_URL_ADMIN ?>assets/css/oneui.min.css">
+  <!-- Stylesheets -->
+  <!-- OneUI framework -->
+  <link rel="stylesheet" id="css-main" href="<?= BASE_URL_ADMIN ?>assets/css/oneui.min.css">
 
-    <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
-    <!-- <link rel="stylesheet" id="css-theme" href="<?= BASE_URL_ADMIN ?>assets/css/themes/amethyst.min.css"> -->
-    <!-- END Stylesheets -->
+  <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
+  <!-- <link rel="stylesheet" id="css-theme" href="<?= BASE_URL_ADMIN ?>assets/css/themes/amethyst.min.css"> -->
+  <!-- END Stylesheets -->
 
-    <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
-    <script src="<?= BASE_URL_ADMIN ?>assets/js/setTheme.js"></script>
-  </head>
+  <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
+  <script src="<?= BASE_URL_ADMIN ?>assets/js/setTheme.js"></script>
 
-  <body>
+  <!-- Jquery -->
+  <script src="<?= BASE_URL_ADMIN ?>assets/js/lib/jquery.min.js"></script>
+</head>
+
+<body>

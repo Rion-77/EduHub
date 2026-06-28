@@ -7,6 +7,8 @@ if (!isset($_POST['topic'])) {
 require_once '../vendor/autoload.php';
 require_once '../config/api-keys.php';
 
+header('Content-Type: application/json');
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 

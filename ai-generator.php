@@ -1,11 +1,11 @@
 <?php
-ob_start(); 
+ob_start();
 require_once "config/database-connect.php";
 require_once 'classes/ai-quiz.class.php';
 
 if (isset($_POST['start-quiz-btn'])) {
 
- /* ************************************* */
+  /* ************************************* */
   // Gets quiz json and
   $generated_quiz = json_decode($_POST['quiz-json'], true);
 
@@ -49,13 +49,11 @@ if (isset($_POST['start-quiz-btn'])) {
 
       $quiz->createOption($option['option_text'], $question_id, $option['is_correct']);
     }
-
   }
-  
+
 
   // Redirect to quiz page
   header("Location: quiz.php?quiz-id=$quiz_id&category_id=$category_id");
-
 }
 ?>
 
@@ -73,18 +71,16 @@ if (isset($_POST['start-quiz-btn'])) {
   </div>
 </div>
 
-<div class="container" style="padding-top:0;padding-bottom:72px">
+<div class="generation-container container" style="padding-top:0;padding-bottom:72px">
   <div class="gen-layout">
 
-    <!-- Form -->
-    <div>
-      <!-- PHP: form action="generate_quiz.php" method="POST" -->
+    <!-- Generation -->
       <div class="gen-card anim-fade-up" style="animation-play-state: running;">
         <h3 style="margin-bottom:20px">⚙️ Configure Your Quiz</h3>
 
         <div class="form-group">
           <label class="form-label">📖 Topic or Subject</label>
-          <input class="form-input" type="text" name="topic" placeholder="HTML form, CSS transitions, Jqeury basics" value="Jquery basic">
+          <input class="form-input" type="text" name="topic" placeholder="HTML form, CSS transitions, Jqeury basics">
           <div class="form-hint empty-topic" style="display:none; color:red; font-size:16px">Please enter a topic</div>
           <div class="form-hint">Be specific for better quality questions.</div>
         </div>
@@ -149,14 +145,20 @@ if (isset($_POST['start-quiz-btn'])) {
 
         <button class="gen-btn" type="submit">✨ Generate Quiz Now</button>
       </div>
-    </div>
 
     <!-- Preview -->
-    <div class="preview-card anim-fade-up delay-1" style="animation-play-state: running;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="preview-card anim-fade-up delay-1" style="display:none; animation-play-state: running; min-height: 592px">
+      <div style="align-items:center;justify-content:space-between;margin-bottom:16px" class="preview-header">
         <h3>📋 Generated Preview</h3>
-        <span class="badge badge-green">✓ Ready</span>
+        <!-- start quiz button -->
+        <div class="start-quiz-container" style="display:none">
+          <form method="POST">
+            <input class="json-holder" type="hidden" name="quiz-json">
+            <button type="submit" name="start-quiz-btn" class="btn btn-primary">▶ Start Quiz</button>
+          </form>
+        </div>
       </div>
+
       <div class="quiz-info alert alert-info" style="margin-bottom:16px"><span>✨</span>
         <h3 class="quiz-title"></h3>
         <p class="quiz-desciption"></p>
@@ -171,12 +173,7 @@ if (isset($_POST['start-quiz-btn'])) {
 
       <!-- <div style="text-align:center;padding:10px;color:var(--slate);font-size:.83rem;background:var(--bg);border-radius:var(--radius-md)">+ 7 more questions</div> -->
 
-      <div class="start-quiz-container" style="margin-top:18px; display:none">
-        <form method="POST">
-          <input class="json-holder" type="hidden" name="quiz-json">
-          <button type="submit" name="start-quiz-btn" class="btn btn-primary">▶ Start Quiz</button>
-        </form>
-      </div>
+
     </div>
   </div>
 </div>
@@ -524,7 +521,8 @@ if (isset($_POST['start-quiz-btn'])) {
     ]
   }
 
-
+    /* ************************************* */
+    // Generation event
   $('.gen-btn').click(() => {
     console.log("button clicked");
 
@@ -552,19 +550,34 @@ if (isset($_POST['start-quiz-btn'])) {
     if (topic === "") {
       $('.empty-topic').css('display', 'block');
     } else {
+
+    
+
+      // hides generation card
+      $('.gen-card').css("display", 'none');
+
+      //shows preview card
+      $('.preview-card').css("display", 'block');
+
       $('.generated-qustions').html(`<span class="loader"></span>`);
       $('.empty-topic').css('display', 'none');
+      $('.preview-header').css('display', 'none');
+      $('.quiz-info').css('display', 'none');
       $.ajax({
-        url: "api/ai-quiz-generator-api-openrouter.php",
+        // url: "https://jsonplaceholder.typicode.com/posts",
+        url: "api/ai-quiz-generator-api-deepseek.php",
+        // url: "api/ai-quiz-generator-api-openrouter.php",
         // url: "api/ai-quiz-generator-api-gemini.php",
         method: "POST",
+        dataType: "json",
         data: {
           'topic': topic,
           'question-number': questionNumber,
           'difficulty': difficulty
         },
         success: function(respone) {
-          // console.log(respone);
+          console.log(respone);
+          // dummyPreview(respone);
           questionPreview(respone);
         },
         error: function(respone) {
@@ -583,7 +596,7 @@ if (isset($_POST['start-quiz-btn'])) {
 
   /* ************************************** */
   // function for successful request
-  function questionPreview(obj) {
+  function dummyPreview(obj) {
 
     // select containers
     const generatedQuestions = $('.generated-qustions');
@@ -593,6 +606,36 @@ if (isset($_POST['start-quiz-btn'])) {
     $(".quiz-desciption").text(obj.description);
 
 
+    let counter = 0;
+
+    let questionHTML = "This is a text";
+    // console.log(typeof questions);
+    // console.log(typeof obj.questions);
+    // console.log(obj.questions);
+
+    // loop all questions
+
+    // Add the html in the container
+    generatedQuestions.html(questionHTML);
+
+    // display info and buttons
+    $('.quiz-info').css("display", "block");
+    $('.start-quiz-container').css("display", "block");
+    $('.preview-header').css('display', 'flex');
+
+
+    //set the json in the hidden input as value
+    $(".json-holder").attr("value", JSON.stringify(obj));
+  }
+
+  function questionPreview(obj) {
+
+    // select containers
+    const generatedQuestions = $('.generated-qustions');
+
+    // quiz title and info
+    $(".quiz-title").text(obj.quiz_name);
+    $(".quiz-desciption").text(obj.description);
 
     let counter = 0;
 
@@ -635,6 +678,7 @@ if (isset($_POST['start-quiz-btn'])) {
     // display info and buttons
     $('.quiz-info').css("display", "block");
     $('.start-quiz-container').css("display", "block");
+    $('.preview-header').css('display', 'flex');
 
 
     //set the json in the hidden input as value

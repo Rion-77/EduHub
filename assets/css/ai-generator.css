@@ -3,8 +3,13 @@
   border-bottom: 1.5px solid var(--border);
   padding: 48px 0 36px;
 }
+
+/* Generation container */
+.generation-container {
+  max-width: 768px;
+}
 .gen-layout {
-  display: grid;
+  /* display: grid; */
   grid-template-columns: 1fr 1fr;
   gap: 32px;
   align-items: start;
@@ -330,6 +335,12 @@
 }
 
 /* Loader */
+
+.loader {
+    display: block;
+    margin-top: 50px;
+    text-align: center;
+}
 
 .loader{
     position: relative;

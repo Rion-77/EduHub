@@ -200,6 +200,8 @@ $right_percentage = $right_answer_counter / $total_question * 100;
           $option_result = $db->query($option_query);
 
           $options = $option_result->fetch_all(MYSQLI_ASSOC);
+          
+          shuffle($options);
 
           //  echo "<pre>";
           //  print_r($options);

@@ -111,7 +111,8 @@ $question_counter = 0;
             $option_result = $db->query($option_query);
 
             $options = $option_result->fetch_all(MYSQLI_ASSOC);
-
+            
+            shuffle($options);
             // echo "<pre>";
             // print_r($options);
             // echo "</pre>";
