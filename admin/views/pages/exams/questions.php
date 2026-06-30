@@ -52,6 +52,9 @@ $total_question = count($questions);
             onclick="window.location.href='?page=create-question&quiz-id=<?= $quiz_id ?>'">
             Add Question
         </button>
+        <a href="exam-print?quiz-id=<?=$quiz_id?>" class="btn btn-sm btn-alt-info ms-1 mb-2">
+                  <i class="fa fa-fw fa-file-invoice me-1"></i> Print Question
+        </a>
 
         <div class="row row-data-container">
             <?php foreach ($questions as $question) { ?>

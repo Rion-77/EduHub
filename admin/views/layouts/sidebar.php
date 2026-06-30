@@ -221,7 +221,7 @@
                 </li>
                 <!-- Leaderboard -->
                 <li class="nav-main-item">
-                    <a class="nav-main-link" href="leaderboard">
+                    <a class="nav-main-link" href="https://eduhub.rioncreates.com/leaderboard.php">
                         <i class="nav-main-link-icon si si-trophy"></i>
                         <span class="nav-main-link-name">Leaderboard</span>
                     </a>
@@ -231,7 +231,7 @@
 
                 <!-- AI Features -->
                 <li class="nav-main-item">
-                    <a class="nav-main-link" href="leaderboard">
+                    <a class="nav-main-link" href="https://eduhub.rioncreates.com/ai-generator.php">
                         <i class="nav-main-link-icon si si-bulb"></i> 
                         <span class="nav-main-link-name">AI Quiz Generator</span>
                     </a>

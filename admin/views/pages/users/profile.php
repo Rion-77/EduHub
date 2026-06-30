@@ -63,7 +63,13 @@ if (empty($row)) {
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="fs-sm fw-semibold text-muted text-uppercase">Right Answer Percentage</div>
-                    <a class="link-fx fs-3" href="javascript:void(0)"><?= ($total_user_quiz_socre / $total_quiz_socre) * 100 . "%" ?></a>
+                    <a class="link-fx fs-3" href="javascript:void(0)"><?php
+       if($total_user_quiz_socre == 0) {
+        echo "0%";
+       } else {
+        echo ($total_user_quiz_socre / $total_quiz_socre) * 100 . "%";
+       }
+        ?></a>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="fs-sm fw-semibold text-muted text-uppercase mb-2">Leaderboard Position</div>

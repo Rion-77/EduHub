@@ -57,6 +57,8 @@ if (isset($_GET["page"])) {
         include_once("views/pages/exams/create-question.php");
     } elseif ($page == "edit-question" || $page == "edit-question.php") {
         include_once("views/pages/exams/edit-question.php");
+    } elseif ($page == "exam-print" || $page == "exam-print.php") {
+        include_once("views/pages/exams/print.php");
     }
     // Course Categoris Route
     elseif ($page == "course-categories" || $page == "course-categories.php") {

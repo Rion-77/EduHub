@@ -27,7 +27,7 @@ if (isset($_POST['login-email']) && isset($_POST['login-password'])) {
         $_SESSION['user_role'] = $user['role_name'];
         $_SESSION['user_picture_link'] = $user['user_picture_link'];
         $_SESSION['total_quiz_score'] = $user['total_quiz_score'];
-        header("Location: header");
+        header("Location: dashboard");
     }
 }
 

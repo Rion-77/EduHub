@@ -21,7 +21,7 @@ if (isset($_POST['delete-id'])) {
 
 /* ************************************* */
 // get all quiz data and Pagination
-$display_item = 5;
+$display_item = 10;
 $number_of_page = Quiz::numberOfPage($display_item);
 
 // get quiz based on pagination
@@ -136,45 +136,6 @@ function timeFormatter($time)
           </table>
         </div>
       </div>
-      <!-- Pagination -->
-      <div class="block-content">
-
-        <nav aria-label="Page navigation">
-          <ul class="pagination justify-content-end">
-            <li class="page-item">
-              <a class="page-link" href="exams?page_no=1" tabindex="-1" aria-label="Previous">
-                <span aria-hidden="true">
-                  <i class="fa fa-angle-double-left"></i>
-                </span>
-                <span class="visually-hidden">Previous</span>
-              </a>
-            </li>
-            <?php for ($i = 1; $i <= $number_of_page; $i++) : ?>
-              <li class="page-item <?php
-                                    if (isset($_GET['page_no']) && $i == $_GET['page_no']) {
-                                      echo "active";
-                                    } elseif (!isset($_GET['page_no']) && $i == 1) {
-                                      echo "active";
-                                    } else {
-                                      echo "";
-                                    }
-                                    ?>">
-                <a class="page-link" href="exams?page_no=<?= $i ?>"><?= $i ?></a>
-              </li>
-            <?php endfor ?>
-            <li class="page-item">
-              <a class="page-link" href="exams?page_no=<?= $number_of_page ?>" aria-label="Next">
-                <span aria-hidden="true">
-                  <i class="fa fa-angle-double-right"></i>
-                </span>
-                <span class="visually-hidden">Next</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-    <!-- END Pagination -->
 
     <!-- Ajax Pagination -->
     <div class="block-content">
