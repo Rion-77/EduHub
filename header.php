@@ -35,9 +35,9 @@ if (file_exists($cssFilePath)) {
     <div class="container">
       <a href="index.php" class="nav-logo">Edu<span class="logo-hub">Hub</span><span class="logo-dot"></span></a>
       <div class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
+        <!-- <a href="dashboard.html">Dashboard</a> -->
         <a href="courses.php" class="active">Courses</a>
-        <a href="progress.html">My Progress</a>
+        <!-- <a href="progress.html">My Progress</a> -->
         <a href="leaderboard.php">Leaderboard</a>
         <a href="ai-generator.php">AI Tools</a>
       </div>
@@ -57,13 +57,13 @@ if (file_exists($cssFilePath)) {
         </div>
       </div>
       <div class="mobile-nav-section">Navigation</div>
-      <a href="dashboard.html" class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a>
-      <a href="courses.html" class="mobile-nav-link active"><span class="icon">📚</span> Courses</a>
-      <a href="progress.html" class="mobile-nav-link"><span class="icon">📈</span> My Progress</a>
-      <a href="leaderboard.html" class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
-      <a href="ai-generator.html" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
+      <!-- <a href="dashboard.html" class="mobile-nav-link"><span class="icon">🏠</span> Dashboard</a> -->
+      <a href="courses.php" class="mobile-nav-link active"><span class="icon">📚</span> Courses</a>
+      <!-- <a href="progress.html" class="mobile-nav-link"><span class="icon">📈</span> My Progress</a> -->
+      <a href="leaderboard.php" class="mobile-nav-link"><span class="icon">🏆</span> Leaderboard</a>
+      <a href="ai-generator.php" class="mobile-nav-link"><span class="icon">✨</span> AI Tools</a>
       <div class="mobile-nav-divider"></div>
-      <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a>
-      <a href="login.html" class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a>
+      <!-- <a href="profile.html" class="mobile-nav-link"><span class="icon">👤</span> Profile</a> -->
+      <!-- <a href="login.html" class="mobile-nav-link"><span class="icon">🚪</span> Log Out</a> -->
     </div>
 </div>

@@ -4,10 +4,19 @@
 <?php require_once "config/db.php" ?>
 
 
+
+<?php
+session_start();
+// print_r($_SESSION);
+
+
+?>
+
 <!-- Global Header -->
+
 <?php include_once "views/layouts/header.php"; ?>
-    <!-- Page Container -->
-    <!--
+<!-- Page Container -->
+<!--
       Available classes for #page-container:
 
       SIDEBAR and SIDE OVERLAY
@@ -42,13 +51,18 @@
         'main-content-narrow'                       Full width Main Content with a percentage width (screen width > 1200px)
     -->
 
-    <!-- Page Container -->
-    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed main-content-narrow">
-      <!-- Side Overlay-->
-      <?php include_once "views/layouts/side-overlay.php"; ?>
+<!-- Page Container -->
+<div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed main-content-narrow">
 
-      <!-- Sidebar -->
-      <!--
+  <!-- Side Overlay-->
+  <?php
+  if (isset($_SESSION['user_id'])) {
+    include_once "views/layouts/side-overlay.php";
+  }
+  ?>
+
+  <!-- Sidebar -->
+  <!--
           Sidebar Mini Mode - Display Helper classes
 
           Adding 'smini-hide' class to an element will make it invisible (opacity: 0) when the sidebar is in mini mode
@@ -59,27 +73,43 @@
           Adding 'smini-visible' to an element will show it (display: inline-block) only when the sidebar is in mini mode
           Adding 'smini-visible-block' to an element will show it (display: block) only when the sidebar is in mini mode
       -->
-      <?php include_once "views/layouts/sidebar.php"; ?>
+  <?php
+  if (isset($_SESSION['user_id'])) {
+    include_once "views/layouts/sidebar.php";
+  }
+  ?>
 
-      <!-- Header -->
-      <?php include_once "views/layouts/page-header.php"; ?>
+  <!-- Header -->
+  <?php
+  if (isset($_SESSION['user_id'])) {
+    include_once "views/layouts/page-header.php";
+  }
+  ?>
 
-      <!-- Main Container -->
-      
-      <?php //include_once "views/pages/dashboard.php"; ?>
-      <?php include_once "route.php"; ?>
+  <!-- Main Container -->
 
-      <!-- Footer --> 
-      <?php include_once "views/layouts/page-footer.php"; ?>
-  
-    </div>
-    
 
-    <!--
+
+
+
+  <?php include_once "route.php"; ?>
+
+
+  <!-- Footer -->
+  <?php
+  if (isset($_SESSION['user_id'])) {
+    include_once "views/layouts/page-footer.php";
+  }
+  ?>
+
+</div>
+
+
+<!--
         OneUI JS
 
         Core libraries and functionality
         webpack is putting everything together at assets/_js/main/app.js
     -->
 <!-- Globar Footer -->
- <?php include_once "views/layouts/footer.php"; ?>
+<?php include_once "views/layouts/footer.php"; ?>

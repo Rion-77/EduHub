@@ -1,3 +1,5 @@
 1.work with dashboard.
 1. add, delete, modify quiz, options , and category
 
+--improvement
+1. improve leaderboard.

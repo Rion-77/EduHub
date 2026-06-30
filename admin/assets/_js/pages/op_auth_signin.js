@@ -16,9 +16,9 @@ class pageAuthSignIn {
     // Init Form Validation
     jQuery(".js-validation-signin").validate({
       rules: {
-        "login-username": {
+        "login-email": {
           required: true,
-          minlength: 3,
+          minlength: 6,
         },
         "login-password": {
           required: true,
@@ -26,9 +26,9 @@ class pageAuthSignIn {
         },
       },
       messages: {
-        "login-username": {
-          required: "Please enter a username",
-          minlength: "Your username must consist of at least 3 characters",
+        "login-email": {
+          required: "Please enter a email",
+          minlength: "Your username must consist of at least 6 characters",
         },
         "login-password": {
           required: "Please provide a password",

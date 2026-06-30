@@ -3,7 +3,17 @@
 if (isset($_GET["page"])) {
     $page = $_GET["page"];
 
-    if ($page == "dashboard" || $page == "dashboard.php") {
+    if (!isset($_SESSION['user_id'])) {
+    include_once("views/pages/authentications/login.php");
+    }
+    // Authentication Route
+     elseif ($page == "login" || $page == "login.php") {
+        include_once("views/pages/authentications/login.php");
+    } elseif ($page == "logout" || $page == "logout.php") {
+        include_once("views/pages/authentications/logout.php");
+    } 
+    // dashboard
+    elseif ($page == "dashboard" || $page == "dashboard.php") {
         include_once("views/pages/dashboard.php");
     } 
     // Users Route
@@ -60,5 +70,5 @@ if (isset($_GET["page"])) {
         include_once("views/pages/dashboard.php");
     }
 } else {
-    include_once("views/pages/dashboard.php");
+     include_once("views/pages/authentications/login.php");
 }
